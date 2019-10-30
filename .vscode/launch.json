@@ -1,0 +1,67 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Run Experiment",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "args": [
+                "MachinesClemsonUnbal.dat",
+                "Experiment.dat"
+            ]
+        },
+        {
+            "name": "Parse Logs",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "args": [
+                "CompleteLogInput.dat",
+            ]
+        },
+        {
+            "name": "Node Usage",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "args": [
+                "v4log1/extra0/",
+            ]
+        },
+        {
+            "name": "Run ExpPlatformManager",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "args": [
+                "Source_IP=127.0.0.1",
+                "Source_Port=15000",
+                "Exp_File=JSONFiles/localtest_tg.json",
+                "Debug=True",
+                "Exp_Index=0"
+            ]
+        },
+        {
+            "name": "Run TaskGraphPM",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "args": [
+                "Source_IP=127.0.0.1",
+                "Source_Port=11011",
+                "Exp_IP=127.0.0.1",
+                "Exp_Port=15000",
+                "Debug=True"
+            ]
+        }
+    ]
+}
