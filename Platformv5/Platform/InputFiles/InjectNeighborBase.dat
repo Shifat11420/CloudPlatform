@@ -1,0 +1,9 @@
+Injector_Type=AddNeighbor
+Source_IP=130.39.225.248
+Source_Port=8010
+Folder=/home/brian/Desktop/gradschool/DockerStuff/TestInjectorSandbox/
+Target_IP=pc212.emulab.net
+Target_Port=8007
+Neighbor_IP=pc225.emulab.net
+Neighbor_Port=8007
+

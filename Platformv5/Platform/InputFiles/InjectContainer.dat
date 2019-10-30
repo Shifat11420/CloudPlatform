@@ -1,0 +1,8 @@
+130.39.225.248
+8010
+/home/brian/Desktop/gradschool/DockerStuff/TestInjectorSandbox/
+docker run testloadimg /bin/echo "Hello Brian"
+1
+third.tar
+130.39.225.248
+8007

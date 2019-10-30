@@ -1,0 +1,12 @@
+{"node_count":"5",
+"prob_work_alloc":"0.0",
+"prob_connected":"0.3",
+"exp_time":"2400",
+"container_count":"20",
+"vec_flow":["-1.0","0.0"],
+"vec_stasis":["0.0","0.0"],
+"container_params":{
+    "args":"python Sandbox/simplematmul.py 100",
+    "files":["simplematmul.py"],
+    "isdocker":"False"}
+}

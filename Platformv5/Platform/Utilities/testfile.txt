@@ -1,0 +1,3 @@
+blah=foo
+elephant=1000
+NINE=3

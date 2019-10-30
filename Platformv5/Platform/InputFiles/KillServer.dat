@@ -1,0 +1,6 @@
+Injector_Type=KillServer
+Source_IP=130.39.225.248
+Source_Port=8010
+Folder=/home/brian/Desktop/gradschool/DockerStuff/TestInjectorSandbox/
+Target_IP=130.39.225.248
+Target_Port=8007

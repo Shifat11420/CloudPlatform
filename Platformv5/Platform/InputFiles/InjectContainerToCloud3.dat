@@ -1,0 +1,8 @@
+Injector_Type=AddJob
+Source_IP=130.39.225.248
+Source_Port=8012
+Folder=/home/brian/Desktop/gradschool/DockerStuff/TestInjectorSandbox/
+Container_Args=docker run testloadimg /bin/echo `ifconfig eth0`
+Container_Files=third.tar
+Target_IP=155.98.39.12
+Target_Port=8007

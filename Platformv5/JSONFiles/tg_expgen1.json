@@ -1,0 +1,23 @@
+{"node_count":"46",
+"prob_work_alloc":"0.0",
+"prob_connected":"0.2",
+"exp_time":"800",
+"container_count":"400",
+ "vec_flows":[["-1.0","0.0"],["0.0","0.0"]],
+ "vec_stases":[["0.0","0.0"],["0.0","0.0"]],
+ "swapTimes":["300"],
+ "graphseed":"1626",
+ "expectedTime":"500",
+"container_params":{
+    "args":"python Sandbox/simplematmul.py 100",
+    "files":["simplematmul.py"],
+    "isdocker":"False"},
+ "taskgraph_job_params":{
+     "args":"python Sandbox/simplematmul.py 100",
+     "files":["simplematmul.py"],
+     "isdocker":"False" },
+ "taskgraph_params":{
+     "matrix_dim":"100",
+     "prob_connected":"0.2"
+ }
+}

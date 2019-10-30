@@ -1,0 +1,35 @@
+{"node_count":"5",
+"exp_time":"1200",
+"graph":[["1","3"],["0","2"],["1","4"],["0","4"],["2","3"]],
+"containers":[{
+    "args":"python Sandbox/simplematmul.py 100",
+    "files":["simplematmul.py"],
+    "idstr":"10",
+    "isdocker":"False"},
+    {
+    "args":"python Sandbox/simplematmul.py 100",
+    "files":["simplematmul.py"],
+    "idstr":"11",
+    "isdocker":"False"},
+    {
+    "args":"python Sandbox/simplematmul.py 100",
+    "files":["simplematmul.py"],
+    "idstr":"12",
+    "isdocker":"False"},
+    {
+    "args":"python Sandbox/simplematmul.py 100",
+    "files":["simplematmul.py"],
+    "idstr":"13",
+    "isdocker":"False"},
+    {
+    "args":"python Sandbox/simplematmul.py 100",
+    "files":["simplematmul.py"],
+    "idstr":"14",
+    "isdocker":"False"},
+    {
+    "args":"python Sandbox/simplematmul.py 100",
+    "files":["simplematmul.py"],
+    "idstr":"15",
+    "isdocker":"False"}],
+"work_alloc":[["1","10","11","12","13","14","15"]]
+}

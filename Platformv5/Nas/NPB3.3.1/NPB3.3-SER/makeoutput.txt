@@ -1,0 +1,70 @@
+make[1]: Entering directory `/home/brian/NAS/NPB3.3.1/NPB3.3-SER/FT'
+rm -f *.o *~ mputil*
+rm -f ft npbparams.h core
+make[1]: Leaving directory `/home/brian/NAS/NPB3.3.1/NPB3.3-SER/FT'
+make[1]: Entering directory `/home/brian/NAS/NPB3.3.1/NPB3.3-SER/FT'
+make[2]: Entering directory `/home/brian/NAS/NPB3.3.1/NPB3.3-SER/sys'
+make[2]: Nothing to be done for `all'.
+make[2]: Leaving directory `/home/brian/NAS/NPB3.3.1/NPB3.3-SER/sys'
+../sys/setparams ft S
+f77 -c  -O appft.f
+   appft:
+Warning on line 101: ilog2 declared EXTERNAL but never used.
+Warning on line 101: randlc declared EXTERNAL but never used.
+f77 -c  -O auxfnct.f
+   compexp:
+   ilog2:
+   ipow46:
+   calculatechecksum:
+   compute_initial_conditions:
+   evolve:
+f77 -c  -O fft3d.f
+   swarztrauber:
+Warning on line 91: timer_read declared EXTERNAL but never used.
+Warning on line 91: ilog2 declared EXTERNAL but never used.
+Warning on line 91: randlc declared EXTERNAL but never used.
+   fftxyz:
+Warning on line 174: timer_read declared EXTERNAL but never used.
+Warning on line 174: randlc declared EXTERNAL but never used.
+f77 -c  -O mainft.f
+   MAIN mainft:
+Warning on line 98: local variable i never used
+Warning on line 98: timer_read declared EXTERNAL but never used.
+Warning on line 98: ilog2 declared EXTERNAL but never used.
+Warning on line 98: randlc declared EXTERNAL but never used.
+   getclass:
+f77 -c  -O verify.f
+   verify:
+cd ../common; f77 -c  -O randi8.f
+   randlc:
+   vranlc:
+/tmp/fort77-31541-1.c: In function ‘randlc_’:
+/tmp/fort77-31541-1.c:19:12: error: unknown type name ‘longint’
+     static longint i246m1 = 70368744177663;
+            ^
+/tmp/fort77-31541-1.c:19:29: warning: overflow in implicit constant conversion [-Woverflow]
+     static longint i246m1 = 70368744177663;
+                             ^
+/tmp/fort77-31541-1.c:25:12: error: unknown type name ‘longint’
+     static longint la, lx;
+            ^
+/tmp/fort77-31541-1.c:41:11: error: ‘longint’ undeclared (first use in this function)
+     lx = (longint) (*x);
+           ^
+/tmp/fort77-31541-1.c:41:11: note: each undeclared identifier is reported only once for each function it appears in
+/tmp/fort77-31541-1.c: In function ‘vranlc_’:
+/tmp/fort77-31541-1.c:56:12: error: unknown type name ‘longint’
+     static longint i246m1 = 70368744177663;
+            ^
+/tmp/fort77-31541-1.c:56:29: warning: overflow in implicit constant conversion [-Woverflow]
+     static longint i246m1 = 70368744177663;
+                             ^
+/tmp/fort77-31541-1.c:63:12: error: unknown type name ‘longint’
+     static longint la, lx;
+            ^
+/tmp/fort77-31541-1.c:82:11: error: ‘longint’ undeclared (first use in this function)
+     lx = (longint) (*x);
+           ^
+/usr/bin/f77: aborting compilation
+make[1]: *** [../common/randi8.o] Error 25
+make[1]: Leaving directory `/home/brian/NAS/NPB3.3.1/NPB3.3-SER/FT'

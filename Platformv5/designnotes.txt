@@ -1,0 +1,24 @@
+ok, so we have an input stream which will periodically get information, which may be partial.
+
+that stream might say:
+
+     //I'm a new node, add me as a neighbor.
+     I want work.
+     I am done with work, here is my answer.
+     
+Just do these for now.
+
+messagedispatcher
+	recieves "I want work"
+	Sends "Work"
+	Work is - tarred container.  containerID.  argument file(s).
+	
+	recieves "I am done with work"
+	recieves file(s) which are work completion.
+	What does it do with them? Needs to match argument with results.  Send those back?  is that redundant, or safe?  
+	     Some kind of reduce.
+
+How does client work?
+    Need the ability to spawn a client -for a reason-
+    so the client itself will be "Asking for work client"
+    or "Sending File Client"

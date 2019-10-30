@@ -1,0 +1,28 @@
+#brian peterson copied this from suite.def.template
+#I do not really understand how to intelligently choose which class(es) to run\
+# I do know how to look up what they mean, but not how to judge which are more
+# or less relevant.
+# S is for Small or Quick tests which I think is best for our purposes.
+# so I am leaving the configuration as it is for now
+# config/suite.def
+# This file is used to build several benchmarks with a single command. 
+# Typing "make suite" in the main directory will build all the benchmarks
+# specified in this file. 
+# Each line of this file contains a benchmark name, class.
+# The name is one of "cg", "is", "dc", "ep", mg", "ft", "sp",
+#  "bt", "lu", and "ua". 
+# The class is one of "S", "W", "A", "B", and "C"
+# (classes D and E are defined for a number of benchmarks, but they
+#  are likely not practical to run in serial. See README.install).
+# No blank lines. 
+# The following example builds serial sample sizes of all benchmarks. 
+ft	A
+mg	A
+sp	A
+lu	A
+bt	A
+is	A
+ep	A
+cg	A
+ua	A
+dc      A

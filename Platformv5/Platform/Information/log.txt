@@ -1,0 +1,15 @@
+On 11/2 I logged into cloudlab, started an experiment with profile
+docker-one
+on emulab
+installed from docker hub, and ran the server with the command
+
+docker run --privileged -p IPADDRESS:PORT:PORT bpete16/distplatform:0.1 /bin/bash Platform/ScriptsDocker/StartServer.bash IPADDRESS PORT
+
+Then I killed the server from coates machine with the injector command
+
+python RunInjector.py KillCloudlabServer.dat
+
+This shows the promise of connections.  Need to work on building a good experiment now.
+
+11/4 - testing neighbor information injector uncovered stupid bug.  fixed and rebuilding with command
+

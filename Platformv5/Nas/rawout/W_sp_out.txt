@@ -1,0 +1,73 @@
+
+
+ NAS Parallel Benchmarks (NPB3.3-SER) - SP Benchmark
+
+ No input file inputsp.data. Using compiled defaults
+ Size:   36x  36x  36
+ Iterations:  400    dt:    .001500
+
+ Time step    1
+ Time step   20
+ Time step   40
+ Time step   60
+ Time step   80
+ Time step  100
+ Time step  120
+ Time step  140
+ Time step  160
+ Time step  180
+ Time step  200
+ Time step  220
+ Time step  240
+ Time step  260
+ Time step  280
+ Time step  300
+ Time step  320
+ Time step  340
+ Time step  360
+ Time step  380
+ Time step  400
+ Verification being performed for class W
+ accuracy setting for epsilon =   .1000000000000E-07
+ Comparison of RMS-norms of residual
+           1  .1893253733584E-02  .1893253733584E-02  .6287873433296E-13
+           2  .1717075447776E-03  .1717075447775E-03  .5577050036379E-12
+           3  .2778153350938E-03  .2778153350936E-03  .7766174327703E-12
+           4  .2887475409984E-03  .2887475409984E-03  .7922722306255E-13
+           5  .3143611161242E-02  .3143611161242E-02  .7904894250200E-13
+ Comparison of RMS-norms of solution error
+           1  .7542088599534E-04  .7542088599534E-04  .2677410268528E-13
+           2  .6512852253085E-05  .6512852253086E-05  .2240858093207E-12
+           3  .1049092285689E-04  .1049092285688E-04  .6670706005264E-12
+           4  .1128838671535E-04  .1128838671535E-04  .3661746259083E-13
+           5  .1212845639773E-03  .1212845639773E-03  .5006022173650E-13
+ Verification Successful
+
+
+ SP Benchmark Completed.
+ Class           =                        W
+ Size            =             36x  36x  36
+ Iterations      =                      400
+ Time in seconds =                     7.89
+ Mop/s total     =                  1796.41
+ Operation type  =           floating point
+ Verification    =               SUCCESSFUL
+ Version         =                    3.3.1
+ Compile date    =              14 Mar 2016
+
+ Compile options:
+    F77          = f77
+    FLINK        = $(F77)
+    F_LIB        = (none)
+    F_INC        = (none)
+    FFLAGS       = -O
+    FLINKFLAGS   = -O
+    RAND         = (none)
+
+
+ Please send all errors/feedbacks to:
+
+ NPB Development Team
+ npb@nas.nasa.gov
+
+

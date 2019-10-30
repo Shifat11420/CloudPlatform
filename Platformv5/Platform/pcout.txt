@@ -1,0 +1,35 @@
+Start
+
+Warnings...
+
+[system path]/_abcoll.py:526: No method arguments, should have self as argument
+[system path]/_abcoll.py:544: Object (other) has no attribute (keys)
+
+[system path]/collections.py:54: Invalid arguments to (__setitem__), got 4, expected 3
+[system path]/collections.py:64: Invalid arguments to (__delitem__), got 3, expected 2
+[system path]/collections.py:82: __reversed__ is not a special method
+[system path]/collections.py:164: Invalid arguments to (__repr__), got 2, expected 1
+[system path]/collections.py:169: Modifying parameter (_repr_running) with a default value may have unexpected consequences
+[system path]/collections.py:175: Modifying parameter (_repr_running) with a default value may have unexpected consequences
+[system path]/collections.py:185: Function return types are inconsistent
+
+NodePlatformManager.py:123: Parameter (n_Port) not used
+
+2 errors suppressed, use -#/--limit to increase the number of errors displayed
+
+Warnings...
+
+[system path]/_abcoll.py:526: No method arguments, should have self as argument
+[system path]/_abcoll.py:544: Object (other) has no attribute (keys)
+
+[system path]/collections.py:54: Invalid arguments to (__setitem__), got 4, expected 3
+[system path]/collections.py:64: Invalid arguments to (__delitem__), got 3, expected 2
+[system path]/collections.py:82: __reversed__ is not a special method
+[system path]/collections.py:164: Invalid arguments to (__repr__), got 2, expected 1
+[system path]/collections.py:169: Modifying parameter (_repr_running) with a default value may have unexpected consequences
+[system path]/collections.py:175: Modifying parameter (_repr_running) with a default value may have unexpected consequences
+[system path]/collections.py:185: Function return types are inconsistent
+
+[system path]/twisted/internet/endpoints.py:484: Local variable (reactor) shadows global defined on line 2 in file ExpPlatformManager.py
+
+5 errors suppressed, use -#/--limit to increase the number of errors displayed
