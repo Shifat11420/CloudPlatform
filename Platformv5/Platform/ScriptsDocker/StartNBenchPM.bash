@@ -32,12 +32,12 @@ echo "StartNBenchPM.bash: starting servers"
 
 function startone {
     # usage: startone ip port eip eport debug
-    echo "Server at "$2":"$1
+    echo "Server at "$1":"$2
     echo "Exp at "$3":"$4
-    echo "python Platform/BenchNodePM.py Source_IP=$2 Source_Port=$1 \\"
-    echo "       Exp_IP=$3 Exp_Port=$4 Debug=$5 &> output$1.txt &"
-    python Platform/BenchNodePM.py "Source_IP=$2" "Source_Port=$1" \
-	   "Exp_IP=$3" "Exp_Port=$4" "Debug=$5" &> output$1.txt &
+    echo "python Platform/BenchNodePM.py Source_IP=$1 Source_Port=$2 \\"
+    echo "       Exp_IP=$3 Exp_Port=$4 Debug=$5 &> output$2.txt &"
+    python Platform/BenchNodePM.py "Source_IP=$1" "Source_Port=$2" \
+	   "Exp_IP=$3" "Exp_Port=$4" "Debug=$5" &> output$2.txt &
 }
 
 # Find IP address
@@ -52,13 +52,9 @@ n=$1
 eip=$2
 eport=$3
 port=$4
+debug=$6
 for i in `seq 2 $n`; do
-   startone $port $myip $eip $eport $6
+   startone $myip $port $eip $eport $debug
    ((port++))
 done
-echo "Server at "$2":"$1
-echo "Exp at "$2":"$3
-echo "python Platform/BenchNodePM.py Source_IP=$myip Source_Port=$port \\"
-echo "       Exp_IP=$eip Exp_Port=$eport Debug=$6 &> output$port.txt &"
-python Platform/BenchNodePM.py "Source_IP=$myip" "Source_Port=$port" \
-       "Exp_IP=$eip" "Exp_Port=$eport" "Debug=$6" &> output$port.txt
+startone $myip $port $eip $eport $debug
