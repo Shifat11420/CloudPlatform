@@ -29,7 +29,7 @@ def BreakExpLog(iFile):
         if(EXPSTART in line):
             vals = line.split(EXPSTART)
             tval = vals[1].strip()
-            tval2 = "2019-" + tval.split("2019-")[1]
+            tval2 = "2020-" + tval.split("2020-")[1]
             expinfo[START]=tval2
         if(RCONT in line):
             vals = line.split(",")
