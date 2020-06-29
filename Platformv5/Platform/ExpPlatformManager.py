@@ -46,10 +46,12 @@ class ExpPlatformManager(PlatformManager):
                 self.expstarted = True
 
     def ManagerThreadRun(self):
+        import time
         dbgprint("good way")
         self.terminate = False
         time.sleep(1)
         while(True):
+            print(MANAGERCHECKTIME)
             time.sleep(MANAGERCHECKTIME)
             if(self.termsent):
                 dbgprint("Checking term")
@@ -123,8 +125,8 @@ class ExpPlatformManager(PlatformManager):
         
 if __name__ == "__main__":
     global DEBUG
-    argsFIP = ArgFIP(sys.argv)
-    source_ip = argsFIP[DICT_SOURCE_IP]
+    argsFIP = ArgFIP(sys.argv)               
+    source_ip = argsFIP[DICT_SOURCE_IP]        
     port = int(argsFIP[DICT_SOURCE_PORT])
     SetOutputFolder(argsFIP[DICT_FOLDER])
     expfilename = argsFIP[DICT_EXP_FILE]
@@ -134,7 +136,7 @@ if __name__ == "__main__":
         setDbg(True)
     else:
         setDbg(False)
-    print "Debug is "+str(DEBUG)
+    print ("Debug is "+str(DEBUG))
     expdef = BuildExpDef(expfilename, expindex)
     if(expdef is None):
         dbgprint("EXP Busted")
