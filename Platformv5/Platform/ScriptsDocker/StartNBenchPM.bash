@@ -40,18 +40,9 @@ function startone {
 	   "Exp_IP=$3" "Exp_Port=$4" "Debug=$5" &> output$2.txt &
 }
 
-<<<<<<< HEAD
-#expects args in form
-# number_to_run exp_ip exp_port start_port internet_profile Debug IP_Prefix
-# 3 127.0.0.1 15000 11000 lo True 127.0
-echo "Hello starting servers"
-a=$4
-myipcmd='ifconfig enp24s0f1 | grep inet | grep '$7" | awk '{print "'$2}'"' | cut -d':' -f2"
-=======
 # Find IP address
 # Why does this use "cut -d':' -f2"?
 myipcmd='ifconfig '$5' | grep inet | grep '$7" | awk '{print "'$2}'"' | cut -d':' -f2"
->>>>>>> 57107252f717c121da0aaed5248c77221a8edc46
 myip="`eval ${myipcmd}`"
 
 echo "myipcmd=$myipcmd"

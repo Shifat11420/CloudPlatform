@@ -24,19 +24,11 @@ function startone {
 	          "Exp_File=$3" "Debug=True" "Exp_Index=0"
 }
 
-<<<<<<< HEAD
-#expects args in form
-# number_to_run exp_ip exp_port start_port internet_profile
-# eth0 15000 Platform/ExpDefOne.txt
-echo "Hello starting Exp servers"
-myip=`ifconfig lo | grep inet | grep -v inet6 | awk '{print $2}' | cut -d':' -f2`
-=======
 # Find IP address
 # Why does this use "cut -d':' -f2"?
 eip=`ifconfig lo | grep inet | grep -v inet6 | awk '{print $2}' | cut -d':' -f2`
 
 echo "eip=$eip  (not used, 127.0.0.1 is hardwired)"
->>>>>>> 57107252f717c121da0aaed5248c77221a8edc46
 
 #startone $eip 15000 "JSONFiles/localtest.json"
 startone 127.0.0.1 15000 "JSONFiles/localtest_tg.json"
