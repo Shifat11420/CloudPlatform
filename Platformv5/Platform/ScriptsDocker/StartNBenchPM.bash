@@ -14,7 +14,7 @@ function startone {
 # 3 127.0.0.1 15000 11000 lo True 127.0
 echo "Hello starting servers"
 a=$4
-myipcmd='ifconfig eno2 | grep inet | grep '$7" | awk '{print "'$2}'"' | cut -d':' -f2"
+myipcmd='ifconfig enp24s0f1 | grep inet | grep '$7" | awk '{print "'$2}'"' | cut -d':' -f2"
 myip="`eval ${myipcmd}`"
 
 for i in `seq 2 $1`; do
