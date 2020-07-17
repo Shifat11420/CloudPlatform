@@ -3,6 +3,7 @@ MACHINES = MachinesClemsonUnbal.dat
 LOGINPUT = CompleteLogInput.dat
 PLATFORM = bpete16/distplatform:4.60
 LOGFILES = v4log1
+SPHINXOP = -H CloudPlatform -A 'S. Mithila, B. Peterson, G. Baumgartner'
 
 runonce:
 	python3 RunExpSafeBareMetal.py ${MACHINES} ${EXPERIMT}
@@ -21,6 +22,16 @@ platform:
 	cd Platformv5; docker build -f Dockerfile -t ${PLATFORM} .
 	cd Platformv5; docker save --output=plat.tar ${PLATFORM}
 	docker rmi `docker images -q`
+
+# FIXME: This doesn't work yet.
+# The code probably need to be ported to Python3 first, since I installed
+# python3-sphinx.  When running sphinx-apidoc, it tries to import all
+# Python files.  That doesn't seem to be working correctly, either
+# imports work differently in Python 3, the modules hierarchy hasn't been
+# constructed correctly, or sphinx-apidoc hasn't been set up right.
+documentation:
+	cd Platformv5; sphinx-apidoc -FMf ${SPHINXOP} -o Documentation Platform
+	cd Platformv5/Documentation; make html
 
 clean:
 	rm -f Platformv5/plat.tar
