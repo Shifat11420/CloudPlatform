@@ -7,7 +7,7 @@ from Utilities.Const import *
 
 class MsgMonitor():
     def __init__(self):
-
+        from Utilities.Const import *   
         self.msgs = []
         self.monlock = threading.Lock()
         self.done = False

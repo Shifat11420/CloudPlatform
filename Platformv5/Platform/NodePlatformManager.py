@@ -40,12 +40,14 @@ class NodePlatformManager(PlatformManager):
         self.workstarts = {}
 
     def StartAll(self):
+        from Utilities.Const import *
         PlatformManager.StartAll(self)
         dbgprint("starting filewaiter")
         self.fileWaitThread = threading.Thread(target=self.WaitForFiles)
         self.fileWaitThread.start()
 
     def WaitForFiles(self):
+        from Utilities.Const import *
         while(True):
             dbgprint("In WaitForFiles")
             time.sleep(5)

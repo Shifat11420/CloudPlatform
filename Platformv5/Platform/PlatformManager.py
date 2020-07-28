@@ -40,9 +40,11 @@ class PlatformManager():
         self.StartServer()
         self.StartManager()
     def StartServer(self):
+        from Utilities.Const import *
         self.serverThread = threading.Thread(target=self.ServerThreadRun)
         self.serverThread.start()
     def StartManager(self):
+        from Utilities.Const import *
         dbgprint("starting mngr")
         self.managerThread = threading.Thread(target=self.ManagerThreadRun)
         self.managerThread.start()
