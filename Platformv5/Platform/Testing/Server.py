@@ -6,6 +6,7 @@ from Utilities.Const import *
 
 
 def ServerListen():
+    from Utilities.Const import *
     # 8007 is the port, choo >1024
     endpoint = TCP4ServerEndpoint(reactor, PORT)
     endpoint.listen(MessageDispatcherFactory(None))
