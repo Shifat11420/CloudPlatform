@@ -20,12 +20,21 @@ def ParseFinishIDAndTime(line):
     return [idval, timeval]
 
 def ParseStartIDAndTime(line):
-    svals = line.split("ID:")
-    endval = svals[len(svals)-1]
-    tvals = endval.split("2020-")
-    idval = int(tvals[0])
-    timestr = "2020-"+tvals[1]
-    timeval = ParseTime(timestr.strip())
+    svals = ""
+    endval = ""
+    tvals = ""
+    idval = 0
+    timestr = ""
+    timeval = ""
+    if "ID:" not in line:
+        pass
+    else: 
+        svals = line.split("ID:")
+        endval = svals[len(svals)-1]
+        tvals = endval.split("2020-")
+        idval = int(tvals[0])
+        timestr = "2020-"+tvals[1]
+        timeval = ParseTime(timestr.strip())    
     return [idval, timeval]
 
 def ParseExpStartTime(line):
