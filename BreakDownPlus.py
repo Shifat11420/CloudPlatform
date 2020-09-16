@@ -79,7 +79,7 @@ def BreakNodeLog(iFile):
                     if(val == SCONT):
                         lsplit = line.split("ID:")
                         mval = lsplit[1].strip()
-                        mval2 = mval.split("2019-")
+                        mval2 = mval.split("2020-")
                         mval3 = mval2[0]
                         idval = mval3
                     else:

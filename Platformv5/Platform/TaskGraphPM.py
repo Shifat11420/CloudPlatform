@@ -243,7 +243,7 @@ class TaskGraphPM(BenchNodePM):
                             del self.incomingjr[key]
                         else:
                             dbgprint("ERROR job req to nowhere!")    
-                
+        from Utilities.Const import *        
         dbgprint("FW:Before incqueue")
         lkeys = list(self.incomingtgjobs.keys())
         for key in lkeys:
