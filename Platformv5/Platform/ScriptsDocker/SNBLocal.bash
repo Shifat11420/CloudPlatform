@@ -9,7 +9,9 @@
 # local network are parameterized differently, maybe also that the node
 # type is parameterized.
 
-# bash Platform/ScriptsDocker/StartNBenchPM.bash \
-#      3 127.0.0.1 15000 11000 lo True 127.0
-bash Platform/ScriptsDocker/StartNTGPM.bash \
-     3 127.0.0.1 15000 11000 lo True 127.0
+ #bash Platform/ScriptsDocker/StartNBenchPM.bash \
+  #    3 127.0.0.1 15000 11000 lo True 127.0
+bash Platform/ScriptsDocker/StartNBenchPM.bash \
+      3 127.0.0.1 15000 11100 lo True 127.0      
+#bash Platform/ScriptsDocker/StartNTGPM.bash \
+#    3 127.0.0.1 15000 11000 lo True 127.0

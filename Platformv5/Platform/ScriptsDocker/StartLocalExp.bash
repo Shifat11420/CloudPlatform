@@ -29,5 +29,6 @@ eip=`ifconfig lo | grep inet | grep -v inet6 | awk '{print $2}' | cut -d':' -f2`
 
 echo "eip=$eip  (not used, 127.0.0.1 is hardwired)"
 
+startone $eip 15000 "JSONFiles/localtest_BNvar.json"
 #startone $eip 15000 "JSONFiles/localtest.json"
-startone 127.0.0.1 15000 "JSONFiles/localtest_tg.json"
+#startone 127.0.0.1 15000 "JSONFiles/localtest_tg.json"

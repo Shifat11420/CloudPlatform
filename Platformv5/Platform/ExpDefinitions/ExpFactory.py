@@ -3,5 +3,6 @@ from ExpDefinitions.BenchDefFactory import BenchDefFactory, BFFromFile
 from ExpDefinitions.TaskGraphDefFactory import TGFFromFile
 
 def BuildExpDef(filename, expindex):
-    bdf = TGFFromFile(filename, expindex)
+    bdf = BFFromFile(filename, expindex)
+   # bdf = TGFFromFile(filename, expindex)
     return bdf.build()

@@ -32,7 +32,9 @@
             "program": "${file}",
             "console": "integratedTerminal",
             "args": [
-                "v4log1/extra0/",
+                //"v4log1/extra0/",
+                "woDockerLocalBenchNodePmOutput/",
+               //"woDockerLocalTaskgraphOutput/",
             ]
         },
         {
@@ -57,7 +59,7 @@
             "console": "integratedTerminal",
             "args": [
                 "Source_IP=127.0.0.1",
-                "Source_Port=11011",
+                "Source_Port=11000",
                 "Exp_IP=127.0.0.1",
                 "Exp_Port=15000",
                 "Debug=True"

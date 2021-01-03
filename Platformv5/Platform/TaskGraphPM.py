@@ -52,7 +52,7 @@ class TaskGraphPM(BenchNodePM):
                 self.msgmon.sendGen(lmg, loc.ip, loc.port)
             for pid in mover.pred_locations:
                 loc = mover.pred_locations[pid]
-                lmg = LocMG(self, newip, newport, sid)
+                lmg = LocMG(self, newip, newport, pid)
                 self.msgmon.sendGen(lmg, loc.ip, loc.port)
                 
         return pkg

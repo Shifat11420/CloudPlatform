@@ -23,9 +23,9 @@ def ParseStartIDAndTime(line):
     svals = ""
     endval = ""
     tvals = ""
-    idval = 0
+    idval = ""
     timestr = ""
-    timeval = ""
+    timeval = "" 
     if "ID:" not in line:
         pass
     else: 
