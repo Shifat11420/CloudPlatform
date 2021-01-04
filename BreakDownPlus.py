@@ -29,7 +29,7 @@ def BreakExpLog(iFile):
         if(EXPSTART in line):
             vals = line.split(EXPSTART)
             tval = vals[1].strip()
-            tval2 = "2020-" + tval.split("2020-")[1]
+            tval2 = "2021-" + tval.split("2021-")[1]
             expinfo[START]=tval2
         if(RCONT in line):
             vals = line.split(",")
@@ -79,7 +79,7 @@ def BreakNodeLog(iFile):
                     if(val == SCONT):
                         lsplit = line.split("ID:")
                         mval = lsplit[1].strip()
-                        mval2 = mval.split("2020-")
+                        mval2 = mval.split("2021-")
                         mval3 = mval2[0]
                         idval = mval3
                     else:

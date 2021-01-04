@@ -31,16 +31,16 @@ def ParseStartIDAndTime(line):
     else: 
         svals = line.split("ID:")
         endval = svals[len(svals)-1]
-        tvals = endval.split("2020-")
+        tvals = endval.split("2021-")
         idval = int(tvals[0])
-        timestr = "2020-"+tvals[1]
+        timestr = "2021-"+tvals[1]
         timeval = ParseTime(timestr.strip())    
     return [idval, timeval]
 
 def ParseExpStartTime(line):
     svals = line.split(EXPSTARTTIME)
-    tvals = svals[1].split("2020-")
-    timestr = "2020-"+tvals[1]
+    tvals = svals[1].split("2021-")
+    timestr = "2021-"+tvals[1]
     timeval = ParseTime(timestr.strip())
     return timeval
 
