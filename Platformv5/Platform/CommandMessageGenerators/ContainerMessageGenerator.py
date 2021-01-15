@@ -20,7 +20,7 @@ class ContainerMessageGenerator(MessageGenerator):
         return False
 
     def reset(self):
-	MessageGenerator.reset(self)
+        MessageGenerator.reset(self)
         self.firsttime = True
         self.finished = False
         

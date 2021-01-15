@@ -7,7 +7,7 @@ from Utilities.Const import *
 
 class MsgMonitor():
     def __init__(self):
-        from Utilities.Const import *   
+        #from Utilities.Const import *                  ##  
         self.msgs = []
         self.monlock = threading.Lock()
         self.done = False
@@ -18,8 +18,8 @@ class MsgMonitor():
         self.done = True
 
     def sendCommand(self, command, context, ip, port):
-	gen = MakeGen(command, context)
-	self.sendGen(gen, ip, port)
+        gen = MakeGen(command, context)
+        self.sendGen(gen, ip, port)
 
     def sendGen(self, msg, ip, port):
         #msgprint("CHECK2"+str(msg.__class__.__name__))

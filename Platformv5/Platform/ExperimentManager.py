@@ -6,4 +6,4 @@ class ExperimentManager():
         self.context = context
     
     def runThreadStep(self):
-        
+        print ("inside runThreadStep")                 ##added print line

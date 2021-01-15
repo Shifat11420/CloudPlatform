@@ -65,44 +65,106 @@ class BenchDefFactory():
 def BFFromFile(in_filename, expindex):
 
     retval = BenchDefFactory(expindex)
+############################# for converting bytedata to str
+    # data = None
+    # with open(in_filename, 'r') as jfile:                       ## commented out
+    #     data = aload(jfile.read())                              ##
+    # if(data is None):return None                                
 
-    data = None
+    bytedata = None
     with open(in_filename, 'r') as jfile:
-        data = aload(jfile.read())
-    if(data is None):return None
+        bytedata = aload(jfile.read())                   ##
+    if(bytedata is None):return None                      ##
+
+    data = {}
+    for key, value in bytedata.items():
+            #print("type of data key", type(key))             #bytes
+            key  = key.decode('utf-8') 
+            #print("type of new data key", type(key))          #str
+            
+            if type(value) == dict:
+                dict1 = {}
+                for key1, val in value.items():
+                    key1  = key1.decode('utf-8') 
+                    
+                    if type(val) == list:
+                        list0 = []
+                        for i in range(len(val)):
+                            val[i]=val[i].decode('utf-8')
+                            #print("second===", key1 , val[i]) 
+                            list0.append(val[i])
+                            dict1[key1] = list0
+                        
+                    else:
+                        val = val.decode('utf-8')      
+                        #print("third===", key1 , val) 
+                        dict1[key1] = val
+                data[key] = dict1 
+            elif type(value) == list:
+                list1 = []
+                for i in range(len(value)):
+                    if type(value[i]) == list:
+                        list2 = []
+                        for k in range(len(value[i])):
+                            value[i][k] = value[i][k].decode('utf-8')
+                            #print("fourth===", key , value[i][k])
+                            list2.append(value[i][k])
+                        list1.append(list2)
+                        data[key] = list1
+                    else:
+                        value[i] = value[i].decode('utf-8')   
+                        #print("fifth===", key , value[i])
+                        list1.append(value[i])
+                        data[key] = list1
+            else:
+                value = value.decode('utf-8')      
+                #print("first===", key , value)              
+                data[key] = value
+
+######################
 
     vals = []
     lofl = []
-    for l in data['vec_stases']:
-        for v in l:
-            vals.append(float(v))
-        lofl.append(vals)
-        vals = []
+    if data.get("vec_stases") is not None:            ##            syntax changes
+        #for l in data['vec_stases']:
+        for l in data.get("vec_stases"):                 ##fix to avoid key error
+            for v in l:
+                vals.append(float(v))
+            lofl.append(vals)
+            vals = []
     retval.vec_stases = lofl
     lofl = []
     vals = []
-    for l in data['vec_flows']:
-        for v in l:
-            vals.append(float(v))
-        lofl.append(vals)
-        vals = []
+    if data.get("vec_flows") is not None:          ##
+        #for l in data['vec_flows']:
+        for l in data.get("vec_flows"):                         ##fix to avoid key error
+            for v in l:
+                vals.append(float(v))
+            lofl.append(vals)
+            vals = []
     retval.vec_flows = lofl
 
     vals = []
-    for v in data['swapTimes']:
-        vals.append(float(v))
+    if data.get("swapTimes") is not None:          ##                  syntax changes
+        for v in data.get("swapTimes"):                            ##fix to avoid key error
+        #for v in data['swapTimes']:
+            vals.append(float(v))
     retval.swapTimes = vals
     #retval.expectedTime = float(data['expectedTime'])
-    retval.node_count = int(data['node_count'])
-    retval.prob_work_alloc = float(data['prob_work_alloc'])
-    retval.prob_connected = float(data['prob_connected'])
-    retval.exp_time = int(data['exp_time'])
-    retval.container_count = int(data['container_count'])
-    retval.graphseed = int(data['graphseed'])
+    retval.node_count = int(data.get("node_count"))                        ##
+    retval.prob_work_alloc = float(data.get("prob_work_alloc"))                ##
+    retval.prob_connected = float(data.get("prob_connected"))               ##
+    retval.exp_time = int(data.get("exp_time"))                            ##           syntax changes
+    retval.container_count = int(data.get("container_count"))               ##
+    retval.graphseed = int(data.get("graphseed"))                             ##
     
-    retval.cp_args = data['container_params']['args']
-    retval.cp_files = data['container_params']['files']
-    if(data['container_params']['isdocker'] == "True"):
+    #retval.cp_args = data['container_params']['args']
+    retval.cp_args = (data.get("container_params")).get("args")               ##
+    #retval.cp_files = data['container_params']['files']
+    retval.cp_files = (data.get("container_params")).get("files")             ## syntax changes
+    
+    #if(data['container_params']['isdocker'] == "True"):
+    if((data.get("container_params")).get("isdocker") == "True"):
         retval.cp_isdocker = True
     else:
         retval.cp_isdocker = False

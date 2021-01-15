@@ -6,11 +6,11 @@ import os.path
 
 class FileNameReader(TCPReader):
     def HandleLine(self, data):
-        vals = data.split(COMMA)
+        vals = data.split(COMMA.encode('utf-8'))
         i = 1
         for val in vals:
-            if(val == FILENAME):
-                self.filename = vals[i]
+            if(val.decode('utf-8') == FILENAME):
+                self.filename = vals[i].decode('utf-8')
             i = i + 1
 
 class IHaveFileReader(FileNameReader):

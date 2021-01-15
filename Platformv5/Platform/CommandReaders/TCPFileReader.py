@@ -1,6 +1,7 @@
 from CommandReaders.TCPReader import TCPReader
 from CommandMessageGenerators.FileIfNeededMG import IHaveFileMG
 from Utilities.Const import *
+from CommandMessageGenerators.TaskGraphMGs import IHaveObligMG             ##added import
 
 class TCPFileDataReader(TCPReader):
     def __init__(self, in_filepath, in_filesize, sub_file_count, in_context, in_taskid=""):
@@ -63,15 +64,15 @@ class TCPFileReader(TCPReader):
         self.taskid = ""
 
     def HandleLine(self, line):
-        vals = line.split(COMMA)
+        vals = line.split(COMMA.encode('utf-8'))
         i = 0
         for val in vals:
-            if(val == FILENAME):
-                self.filename = vals[i+1]
-            if(val == FILESIZE):
-                self.filesize = vals[i+1]
-            if(val == TASKID):
-                self.taskid = vals[i+1]
+            if(val.decode('utf-8') == FILENAME):
+                self.filename = vals[i+1].decode('utf-8')
+            if(val.decode('utf-8') == FILESIZE):
+                self.filesize = vals[i+1].decode('utf-8')
+            if(val.decode('utf-8') == TASKID):
+                self.taskid = vals[i+1].decode('utf-8')
             i = i + 1
         self.finished = True
 

@@ -8,24 +8,24 @@ from Utilities.Const import *
 class ReceiveTGQueueRdr(TCPReader):
     def HandleLine(self, data):
         dbgprint("RecieveTGQueueRdr:"+str(data))
-        vals = data.split(",")
-        nodeid = vals[1]
+        vals = data.split(",".encode('utf-8'))
+        nodeid = vals[1].decode('utf-8')
         tginfo = {}
         for i in range(2, len(vals), 2):
-            tginfo[int(vals[i])] =  int(vals[i+1])
+            tginfo[int(vals[i].decode('utf-8'))] =  int(vals[i+1].decode('utf-8'))
         self.context.RecNeighborTGInfo(nodeid, tginfo)
         
 class DYNTaskObligRdr(TCPReader):
     def HandleLine(self, data):
-        vals = data.split(COMMA)
+        vals = data.split(COMMA.encode('utf-8'))
         i = 1
         self.taskid = ""
         self.filename = ""
         for val in vals:
-            if(val == TASKID):
-                self.taskid = vals[i]
-            if(val == FILENAME):
-                self.filename = vals[i]
+            if(val.decode('utf-8') == TASKID):
+                self.taskid = vals[i].decode('utf-8')
+            if(val.decode('utf-8') == FILENAME):
+                self.filename = vals[i].decode('utf-8')
             i = i + 1
 
     def GetResponse(self):
@@ -39,15 +39,15 @@ class DYNTaskObligRdr(TCPReader):
 
 class IHaveObligRdr(TCPReader):
     def HandleLine(self, data):
-        vals = data.split(COMMA)
+        vals = data.split(COMMA.encode('utf-8'))
         i = 1
         self.taskid = ""
         self.filename = ""
         for val in vals:
-            if(val == TASKID):
-                self.taskid = vals[i]
-            if(val == FILENAME):
-                self.filename = vals[i]
+            if(val.decode('utf-8') == TASKID):
+                self.taskid = vals[i].decode('utf-8')
+            if(val.encode('utf-8') == FILENAME):
+                self.filename = vals[i].decode('utf-8')
             i = i + 1
 
     def WriteResponse(self, transp):
@@ -55,15 +55,15 @@ class IHaveObligRdr(TCPReader):
 
 class INeedObligRdr(TCPReader):
     def HandleLine(self, data):
-        vals = data.split(COMMA)
+        vals = data.split(COMMA.encode('utf-8'))
         i = 1
         self.taskid = ""
         self.filename = ""
         for val in vals:
-            if(val == TASKID):
-                self.taskid = vals[i]
-            if(val == FILENAME):
-                self.filename = vals[i]
+            if(val.decode('utf-8') == TASKID):
+                self.taskid = vals[i].decode('utf-8')
+            if(val.decode('utf-8') == FILENAME):
+                self.filename = vals[i].decode('utf-8')
             i = i + 1
             
     def GetResponse(self):
@@ -73,7 +73,7 @@ class INeedObligRdr(TCPReader):
 class LinkReader(TCPReader):
     def HandleLine(self, data):
         dbgprint("LocReader")
-        vals = data.split(COMMA)
+        vals = data.split(COMMA.encode('utf-8'))
         i = 1
         self.ip = ""
         self.port = 0
@@ -82,18 +82,18 @@ class LinkReader(TCPReader):
         self.tag = ""
         self.rtaskid = ""
         for val in vals:
-            if(val == STR_IP):
-                self.ip = vals[i]
-            if(val == STR_PORT):
-                self.port = int(vals[i])
-            if(val == TASKID):
-                self.taskid = vals[i]
-            if(val == REFTASKID):
-                self.rtaskid = vals[i]
+            if(val.decode('utf-8') == STR_IP):
+                self.ip = vals[i].decode('utf-8')
+            if(val.decode('utf-8') == STR_PORT):
+                self.port = int(vals[i].decode('utf-8'))
+            if(val.decode('utf-8') == TASKID):
+                self.taskid = vals[i].decode('utf-8')
+            if(val.decode('utf-8') == REFTASKID):
+                self.rtaskid = vals[i].decode('utf-8')
             if(val == TAG):
                 self.tag = vals[i]
-            if(val == INDEX):
-                self.index = int(vals[i])
+            if(val.decode('utf-8') == INDEX):
+                self.index = int(vals[i].decode('utf-8'))
             i = i + 1
 
         self.context.GotLink(self.ip, self.port, self.taskid, self.rtaskid, self.tag, self.index)

@@ -1,7 +1,7 @@
 from Utilities.Const import *
 from CommandMessageGenerators.ContainerMessageGenerator import TGJobMG
-from SubContManager import ContainerManager
-from TGHelpers import LocationForwarder, JobRequirement
+from .SubContManager import ContainerManager                 ##. added
+from .TGHelpers import LocationForwarder, JobRequirement        ##. added
 import os
 
 class TGManager(ContainerManager):

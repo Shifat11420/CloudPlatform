@@ -8,6 +8,9 @@ from Utilities.jsonfixer import aload
 from Utilities.Const import *
 from DockerManagers.SubContManager import ContainerManager
 from DockerManagers.TGManager import TGManager
+from twisted.python.compat import xrange                              ##added import
+from numpy.random.tests import data                                   ##added import
+from ExpDefinitions.BenchDefinition import BenchDefinition            ##added import
 
 class TaskGraphDefinition():
     def __init__(self):

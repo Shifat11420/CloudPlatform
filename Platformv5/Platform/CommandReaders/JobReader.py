@@ -15,17 +15,17 @@ class JobReader(TCPReader):
         self.finished = False
 
     def HandleLine(self, line):
-        vals = line.split(COMMA)
+        vals = line.split(COMMA.encode('utf-8'))
         i = 0
         for val in vals:
-            if(val == IMAGE):
-                self.imagename = vals[i+1]
-            if(val == ARGS):
-                self.args = vals[i+1]
-            if(val == COMMAND):
-                self.command = vals[i+1]
-            if(val == ARGSFILE):
-                f = open(GetFilePath(val), 'r')
+            if(val.decode('utf-8') == IMAGE):
+                self.imagename = vals[i+1].decode('utf-8')
+            if(val.decode('utf-8') == ARGS):
+                self.args = vals[i+1].decode('utf-8')
+            if(val.decode('utf-8') == COMMAND):
+                self.command = vals[i+1].decode('utf-8')
+            if(val.decode('utf-8') == ARGSFILE):
+                f = open(GetFilePath(val.decode('utf-8')), 'r')
                 self.args = f.read()
                 f.close()
             i = i + 1

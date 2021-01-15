@@ -1,5 +1,5 @@
 from Utilities.Const import *
-from CommandMessageGenerators.MessageGenerator import MessageGenerator
+from CommandMessageGenerators.MessageGenerator import MessageGenerator, StringMessageGenerator   ##added import
 import os
 
 class DockerRunMessageGenerator(StringMessageGenerator):

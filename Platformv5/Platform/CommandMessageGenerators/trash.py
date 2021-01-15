@@ -1,4 +1,5 @@
-
+from Utilities.Const import *
+from CommandMessageGenerators.MessageGenerator import StringMessageGenerator
 class NewLeaderAcceptMG(StringMessageGenerator):
     def __init__(self, in_context):
         strmsg = COMMAND_LEADERACCEPT + COMMA + in_context.idval

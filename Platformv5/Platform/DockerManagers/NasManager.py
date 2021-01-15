@@ -18,6 +18,6 @@ def GetRValueFromNAS():
             dbgprint("parsed out:"+str(val.split(",")[7]))
             timeval = val.split(",")[7]
         except IndexError:
-            print "ERR:"+str(val)
+            print ("ERR:"+str(val))                         ##
             timeval = DEFAULT_VALUE
     return timeval

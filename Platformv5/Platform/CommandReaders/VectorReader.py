@@ -20,19 +20,19 @@ class SwapTimesReader(TCPReader):
     def HandleLine(self, data):
         dbgprint("SwapTimesReader")
         v = []
-        vals = data.split(COMMA)
+        vals = data.split(COMMA.encode('utf-8'))
         for x in range(1,len(vals) -1):
-            v.append(float(vals[x]))
+            v.append(float(vals[x].decode('utf-8')))
         self.context.VContainer.setSwapTimes(v)
 
 class StasisVectorReader(TCPReader):
     def HandleLine(self, data):
-        expprint("ReceiveStasisVector"+str(data))
-        v = parseVSet(data)
+        expprint("ReceiveStasisVector"+str(data.decode('utf-8')))
+        v = parseVSet(data.decode('utf-8'))
         self.context.VContainer.setStasisVector(v)
 
 class FlowVectorReader(TCPReader):
     def HandleLine(self, data):
-        expprint("ReceiveFlowVector"+str(data))
-        v = parseVSet(data)
+        expprint("ReceiveFlowVector"+str(data.decode('utf-8')))
+        v = parseVSet(data.decode('utf-8'))
         self.context.VContainer.setFlowVector(v)

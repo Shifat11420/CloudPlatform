@@ -11,8 +11,8 @@ class SendBenchReader(TCPReader):
 class ReceiveBenchReader(TCPReader):
     def HandleLine(self, data):
         dbgprint("RecieveBenchReader")
-        vals = data.split(",")
-        nodeid = vals[1]
-        nodebench = vals[2]
+        vals = data.split(",".encode('utf-8'))
+        nodeid = vals[1].decode('utf-8')
+        nodebench = vals[2].decode('utf-8')
         self.context.SetNeighborBench(nodeid, nodebench)
         

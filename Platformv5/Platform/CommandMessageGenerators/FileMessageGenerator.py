@@ -13,8 +13,8 @@ class FileMessageGenerator(MessageGenerator):
         self.extra = ""
 
     def reset(self):
-	MessageGenerator.reset(self)
-	self.fhandler = None
+        MessageGenerator.reset(self)
+        self.fhandler = None
 
     def read(self):
         if(self.fhandler == None):
@@ -33,7 +33,7 @@ class FileMessageGenerator(MessageGenerator):
                 dbgprint("FMG:PROBLEM!")
             return strval
 
-        val = self.fhandler.read(FILECHUNK)
+        val = self.fhandler.read(FILECHUNK).decode('utf-8')
         if(not val):
             self.fhandler.close()
             self.fhandler = None

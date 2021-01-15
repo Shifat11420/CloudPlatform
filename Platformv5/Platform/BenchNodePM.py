@@ -11,6 +11,7 @@ from CommandMessageGenerators.ContainerMessageGenerator import ContainerMessageG
 from CommandMessageGenerators.ComboMsgGen import ComboGen
 from CommandMessageGenerators.AskForWork import AskForWork
 import datetime
+from twisted.python.compat import xrange                                ##added import
 
 DEFAULT_CONN_TIME = 100
 
@@ -35,7 +36,7 @@ class BenchNodePM(NodePlatformManager):
                 tpl = self.neighborInfos.pop(0)
                 self.neighborInfos.append(tpl)
         if(tpl != None):
-	    self.msgmon.sendCommand(COMMAND_ASKFORWORK, self, tpl[0], tpl[1])
+	        self.msgmon.sendCommand(COMMAND_ASKFORWORK, self, tpl[0], tpl[1])
 
     def SetExpectCompTime(self, atime):
         self.expectCompTime = atime
@@ -215,19 +216,19 @@ class BenchNodePM(NodePlatformManager):
 if __name__ == "__main__":
     global DEBUG
     argsFIP = ArgFIP(sys.argv)
-    print sys.argv
+    print (sys.argv)                                            ##
     source_ip = argsFIP[DICT_SOURCE_IP]
     port = int(argsFIP[DICT_SOURCE_PORT])
     SetOutputFolder(argsFIP[DICT_FOLDER])
     exp_ip = argsFIP[DICT_EXP_IP]
     exp_port = argsFIP[DICT_EXP_PORT]
-    print argsFIP
+    print (argsFIP)                                    ##
     dbg = argsFIP[DICT_DEBUG]
     if(dbg == "True"):
         setDbg(True)
     else:
         setDbg(False)
-    print "Debug is "+str(DEBUG)
+    print ("Debug is "+str(DEBUG))                        ##
 
     pm = BenchNodePM(source_ip, port, exp_ip, exp_port)
     pm.StartAll()

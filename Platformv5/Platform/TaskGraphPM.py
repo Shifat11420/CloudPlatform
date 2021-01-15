@@ -10,6 +10,7 @@ from Utilities.FileUtil import SetOutputFolder, expprint
 from Utilities.Const import *
 import threading
 import os.path
+from twisted.python.compat import xrange                      ##added import
 
 class TaskGraphPM(BenchNodePM):
 
@@ -108,7 +109,7 @@ class TaskGraphPM(BenchNodePM):
                 atgjob.pred_locations[ataskid] = lf
         
 
-    def GotLocation(self, in_ip, in_port, ataskid, aindex):
+    def GotLocation(self, in_ip, in_port, ataskid, atag, aindex):                         ##added atag
         
         dbgprint("GotLocation:"+str(ataskid)+str(atag)+str(aindex))
         lf = LocationForwarder(in_ip, in_port, aindex, ataskid)
@@ -243,7 +244,7 @@ class TaskGraphPM(BenchNodePM):
                             del self.incomingjr[key]
                         else:
                             dbgprint("ERROR job req to nowhere!")    
-        from Utilities.Const import *        
+        #from Utilities.Const import *                    ##        
         dbgprint("FW:Before incqueue")
         lkeys = list(self.incomingtgjobs.keys())
         for key in lkeys:
@@ -375,19 +376,19 @@ class TaskGraphPM(BenchNodePM):
 if __name__ == "__main__":
     global DEBUG
     argsFIP = ArgFIP(sys.argv)
-    print sys.argv
+    print (sys.argv)                                    ##
     source_ip = argsFIP[DICT_SOURCE_IP]
     port = int(argsFIP[DICT_SOURCE_PORT])
     SetOutputFolder(argsFIP[DICT_FOLDER])
     exp_ip = argsFIP[DICT_EXP_IP]
     exp_port = argsFIP[DICT_EXP_PORT]
-    print argsFIP
+    print (argsFIP)                                  ##
     dbg = argsFIP[DICT_DEBUG]
     if(dbg == "True"):
         setDbg(True)
     else:
         setDbg(False)
-    print "Debug is "+str(DEBUG)
+    print ("Debug is "+str(DEBUG))                ##
 
     pm = TaskGraphPM(source_ip, port, exp_ip, exp_port)
     pm.StartAll()

@@ -9,11 +9,11 @@ class ConnTestMGen(MessageGenerator):
         countdown = MAXCOUNTDOWN
 
     def read(self):
-        if(countdown == 0):
+        if(self.countdown == 0):                                      ##added self
             return None
         else:
             countdown = countdown - 1
-            return COMMAND_COMMTEST + COMMA + str(countdown) + LINEDELIM
+            return COMMAND_CONNTEST + COMMA + str(countdown) + LINEDELIM                   ## correct spelling from COMMTEST
 
     def reset(self):
         MessageGenerator.reset(self)

@@ -1,5 +1,5 @@
 from CommandReaders.TCPReader import TCPReader
-from Utilities.Const import 
+from Utilities.Const import dbgprint              ##added import
 
 class TerminateReader(TCPReader):
     def HandleLine(self, data):

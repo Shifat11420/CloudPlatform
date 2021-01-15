@@ -6,6 +6,8 @@ from CommandMessageGenerators.MessageRepeat import MsgMonitor
 from MessageManagers.MessageDispatcher import MessageDispatcherFactory
 from JobLock import JobLock
 from simplematmul import runmatmul
+from Utilities.Const import dbgprint
+from twisted.python.compat import xrange
 
 class ijob():
 

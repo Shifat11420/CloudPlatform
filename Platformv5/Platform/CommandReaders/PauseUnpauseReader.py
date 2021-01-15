@@ -11,8 +11,8 @@ class PauseReader(TCPReader):
 
 class TimeUnpauseReader(TCPReader):
     def HandleLine(self, data):
-        vals = data.split(COMMA)
-        dtval = datetime.datetime.strptime(vals[1], "%Y-%m-%dT%H:%M:%S.%f")
+        vals = data.split(COMMA.encode('utf-8'))
+        dtval = datetime.datetime.strptime(vals[1].decode('utf-8'), "%Y-%m-%dT%H:%M:%S.%f")
         self.context.SetUnpauseDatetime(dtval)
     def LoseConnection(self):
         return True

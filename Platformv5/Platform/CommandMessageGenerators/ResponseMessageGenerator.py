@@ -12,9 +12,9 @@ class ResponseMessageGenerator(MessageGenerator):
         self.filemgr = None
 
     def reset(self):
-	MessageGenerator.reset(self)
-	self.finished = False
-	self.filemgr = None
+        MessageGenerator.reset(self)
+        self.finished = False
+        self.filemgr = None
 
     def read(self):
         if(self.finished):

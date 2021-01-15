@@ -22,7 +22,7 @@ class OrgBenchPM(BenchNodePM):
         self.groupsize = 1
         self.maxgroupsize = DEFAULT_MAX_GROUP_SIZE
 
-        self.
+        #self.                                        ##
 
     def SetMaxGroupSize(self, newsize):
         self.groupsize = newsize
@@ -30,4 +30,4 @@ class OrgBenchPM(BenchNodePM):
     def SetConnThreshold(self, newthreshold):
         self.connthreshold = newthreshold
 
-    def 
+    #def                                        ## 

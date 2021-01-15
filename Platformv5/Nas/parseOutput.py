@@ -48,7 +48,7 @@ def ParseAllFiles():
 def DumpOutput():
     with open(parsedpref + parsedoutfile, "r") as pfile:
         val = pfile.read()
-        print val
+        print (val)                        ##
 
 ParseAllFiles()
 DumpOutput()

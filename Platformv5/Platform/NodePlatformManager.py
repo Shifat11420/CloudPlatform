@@ -14,6 +14,7 @@ import datetime
 import sys
 from PlatformManager import PlatformManager
 from DockerManagers.NasManager import GetRValueFromNAS
+from tcp_latency import measure_latency
 
 DEFAULTBENCHTIME = 400
 
@@ -40,14 +41,14 @@ class NodePlatformManager(PlatformManager):
         self.workstarts = {}
 
     def StartAll(self):
-        from Utilities.Const import *
+        #from Utilities.Const import *                 ##
         PlatformManager.StartAll(self)
         dbgprint("starting filewaiter")
         self.fileWaitThread = threading.Thread(target=self.WaitForFiles)
         self.fileWaitThread.start()
 
     def WaitForFiles(self):
-        from Utilities.Const import *
+        #from Utilities.Const import *                      ##
         while(True):
             dbgprint("In WaitForFiles")
             time.sleep(5)
@@ -131,7 +132,7 @@ class NodePlatformManager(PlatformManager):
             resp = self.ExecContainer.PackageResponse()
             toip = self.ExecContainer.work_source_ip
             toport = self.ExecContainer.work_source_port
-	    self.msgmon.sendGen(resp, toip, toport)
+            self.msgmon.sendGen(resp, toip, toport)
 
     def NoWorkToDo(self):
         pass
@@ -170,15 +171,19 @@ class NodePlatformManager(PlatformManager):
             self.ExecContainer = None
     
     def ReportToExp(self):
-	mgen = ReceiveExpNode(self, self.idval, self.IP, self.Port)
+        mgen = ReceiveExpNode(self, self.idval, self.IP, self.Port)
         dbgprint("Sending To Exp at:"+str(self.Exp_IP)+":"+str(self.Exp_Port))
         expprint("Sending To Exp at:"+str(self.Exp_IP)+":"+str(self.Exp_Port))
         self.msgmon.sendGen(mgen, self.Exp_IP, self.Exp_Port)
 
     def ManagerThreadRun(self):
         self.terminate = False
-	time.sleep(1)
-	self.ReportToExp()
+        time.sleep(1)
+        self.ReportToExp()
+    ########################
+     #   Neighborlatency = MeasureAvgLatency( DICT_NEIGHBOR_IP, DICT_NEIGHBOR_PORT,2 ,10)
+      #  dbgprint("Communication latency of nighbor : ", Neighborlatency)
+    ###########################
         while(True):
             time.sleep(MANAGERCHECKTIME)
             dbgprint("npm_mtr")
@@ -226,6 +231,16 @@ class NodePlatformManager(PlatformManager):
     def DeleteNeighbor(self, n_IP, n_Port, n_ID):
         with self.neighborInfoLock:
             del self.neighborInfos[n_ID]
+#####################################################
+    # def MeasureAvgLatency(self, host, port, runs, timeout):
+    #     LatencyList = measure_latency(host, port, runs, timeout)
+    #     summ = 0.0
+    #     for i in range(len(LatencyList)):
+    #         summ = summ + LatencyList[i]
+    #     avgLatency = summ/runs
+    #     return avgLatency
+################################################################
+
 '''
 if __name__ == "__main__":
     

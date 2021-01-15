@@ -1,4 +1,5 @@
 from Testing.JobInjector import JobInjector
+from twisted.python.compat import raw_input                     ##added import
 
 
 ji = JobInjector()

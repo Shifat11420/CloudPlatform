@@ -25,7 +25,7 @@ class MessageSender(MessageDispatcher):
         while(val != None):
             expprint("SendMessage:"+str(val))
             dbgprint("SendMessage:Started sending msg:"+str(val))
-            self.transport.write(val)
+            self.transport.write(val.encode('utf-8'))
             val = self.messagegen.read()
         dbgprint("SendMessage: Val is none")
         if(self.messagegen.OneShot()):
@@ -48,7 +48,7 @@ class MessageSenderFactory(protocol.ClientFactory):
     
     def clientConnectionFailed(self, connector, reason):
         dbgprint("Connection failed - goodbye!" + str(reason))
-	self.generator.setBadFinish()
+        self.generator.setBadFinish()
     
     def clientConnectionLost(self, connector, reason):
         dbgprint("Connection lost - goodbye!" + str(reason))

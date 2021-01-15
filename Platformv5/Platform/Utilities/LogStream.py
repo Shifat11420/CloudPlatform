@@ -18,7 +18,7 @@ class LogStream():
 
     def ldbgprint(self, val):
         if(True):
-            print val
+            print (val)                           ##
 
     def reset(self):
         self.pend = False

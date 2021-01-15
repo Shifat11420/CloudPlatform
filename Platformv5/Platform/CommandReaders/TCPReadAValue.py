@@ -31,7 +31,7 @@ class TCPGetValue():
         self.reader = None
         self.lastrem = ""
         
-    def GetValue(data, notdoneval):
+    def GetValue(self, data, notdoneval):                     ##added self
         if(self.reader == None):
             self.reader = TCPReadAValue(self.delim)
             data = self.lastrem + data
@@ -44,5 +44,5 @@ class TCPGetValue():
             return val
         return notdoneval
 
-    def GetRemainder():
+    def GetRemainder(self):                 ##added self
         return self.lastrem

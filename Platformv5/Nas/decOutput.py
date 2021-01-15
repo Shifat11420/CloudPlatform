@@ -56,7 +56,7 @@ def DumpOutput():
 
             lcount = lcount + 1
 
-        print str((fsum/ (lcount - 1)))
+        print (str((fsum/ (lcount - 1))))        ##
 
 ParseAllFiles()
 DumpOutput()

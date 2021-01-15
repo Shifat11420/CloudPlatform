@@ -2,6 +2,7 @@ from Utilities.Const import *
 from Utilities.FileUtil import expprint
 from CommandReaders.TCPReader import TCPReader
 import sys
+from CommandMessageGenerators.MessageGenerator import StringMessageGenerator   ##added import
 
 
 class HelloReader(TCPReader):

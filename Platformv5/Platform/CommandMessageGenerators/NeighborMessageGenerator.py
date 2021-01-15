@@ -7,7 +7,7 @@ class AddNeighborMessageGenerator(StringMessageGenerator):
         strmsg = strmsg + COMMA 
         strmsg = strmsg + STR_IP 
         strmsg = strmsg + COMMA 
-        strmsg = strmsg + n_ip 
+        strmsg = strmsg + n_ip
         strmsg = strmsg + COMMA 
         strmsg = strmsg + STR_PORT
         strmsg = strmsg + COMMA 

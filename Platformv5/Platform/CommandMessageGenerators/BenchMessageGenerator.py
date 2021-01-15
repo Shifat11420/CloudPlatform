@@ -20,7 +20,7 @@ class BenchMessageGenerator(MessageGenerator):
         self.firsttime = True
 
     def reset(self):
-	MessageGenerator.reset(self)
+        MessageGenerator.reset(self)
         self.finished = False
         self.firsttime = True
 

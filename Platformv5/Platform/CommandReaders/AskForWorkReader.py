@@ -6,9 +6,9 @@ from CommandMessageGenerators.ContainerMessageGenerator import ContainerMessageG
 class AskForWorkReader(TCPReader):
     def HandleLine(self, data):
         dbgprint("RecieveAskForWork")
-        vals = data.split(",")
-        nodeid = vals[1]
-        killcount = int(vals[2])
+        vals = data.split(",".encode('utf-8'))
+        nodeid = vals[1].decode('utf-8')
+        killcount = int(vals[2].decode('utf-8'))
         self.context.HandleWorkRequest(nodeid, killcount)
 
 #    def GetResponse(self):

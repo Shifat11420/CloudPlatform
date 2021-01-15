@@ -37,7 +37,7 @@ class MessageDispatcher(LineReceiver):
     #and the next message will be parsed by the factory
     #to create a new handler.
     def lineReceived(self, line):
-        from Utilities.Const import *
+        #from Utilities.Const import *               ##
         #dbgprint("LineReceived:"+str(line))
         if(self.messagehandler == None):
             self.messagehandler = self.ReaderFactory.buildMessageHandler(line)

@@ -3,6 +3,6 @@ from CommandMessageGenerators.MessageGenerator import StringMessageGenerator
 
 class ReceiveReq(TCPReader):
     def GetResponse(self):
-        return ReqAckMsgGen(self)
+        return self.ReqAckMsgGen(self)         ##added self
 
     

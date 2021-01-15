@@ -34,7 +34,7 @@ class TCPGetFile(TCPReader):
     def GetRemainder(self):
         return self.remainder
 
-    def ConcatePath(v1, v2):
+    def ConcatePath(self, v1, v2):                    ##added self
         if(not v1.endswith("/")):
             return v1 + "/" + v2
         return v1 + "/" + v2

@@ -8,8 +8,8 @@ class ConnTestReader(TCPReader):
         
     def HandleLine(self, line):
         dbgprint("ConnTest")
-        vals = line.split(COMMA)
-        if(int(vals[2]) == 0):
+        vals = line.split(COMMA.encode('utf-8'))
+        if(int(vals[2].decode('utf-8')) == 0):
             self.finished = True
 
     def IsFinished(self):
@@ -22,5 +22,5 @@ class ConnTestReader(TCPReader):
 
 class ConnRespReader(TCPReader):
     def HandleLine(self, line):
-        vals = line.split(",")
-        self.context.ReportConnTestFinished(vals[1])
+        vals = line.split(",".encode('utf-8'))
+        self.context.ReportConnTestFinished(vals[1].decode('utf-8'))

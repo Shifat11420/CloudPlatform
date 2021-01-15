@@ -7,6 +7,8 @@ import json
 from Utilities.jsonfixer import aload
 from Utilities.Const import *
 from DockerManagers.SubContManager import ContainerManager
+from twisted.python.compat import xrange                    ##added import
+from numpy.random.tests import data                         ##added import
 
 class BenchDefinition():
     def __init__(self):
@@ -71,9 +73,10 @@ def benchBuildFromFile(in_filename):
 
     retval = BenchDefinition()
 
-    with open(in_filename, 'r') as jfile:
-        retval.data = aload(jfile.read())
-    if(retval.data is None):return None
+    # with open(in_filename, 'r') as jfile:                    ## commented out
+    #     retval.data = aload(jfile.read())                     ##
+    # if(retval.data is None):return None                       ##
+    
 
     #so at the top level the file has kv pairs
     #   node_count  value is int
@@ -84,6 +87,62 @@ def benchBuildFromFile(in_filename):
     #      files - files to possess.  First file must be zip which can be docker loaded
     #      idstr - string that uniquely identifies work
     #   work_alloc - list of lists.  sub lists start with node index, other elements are container idstrs
+
+
+############################# for converting bytedata to str
+    
+    with open(in_filename, 'r') as jfile:
+        bytedata = aload(jfile.read())
+    if(bytedata is None):return None
+
+
+    data = {}
+
+    for key, value in bytedata.items():
+            #print("type of data key", type(key))             #bytes
+            key  = key.decode('utf-8') 
+            #print("type of new data key", type(key))          #str
+            
+            if type(value) == dict:
+                dict1 = {}
+                for key1, val in value.items():
+                    key1  = key1.decode('utf-8') 
+                    
+                    if type(val) == list:
+                        list0 = []
+                        for i in range(len(val)):
+                            val[i]=val[i].decode('utf-8')
+                            #print("second===", key1 , val[i]) 
+                            list0.append(val[i])
+                            dict1[key1] = list0
+                        
+                    else:
+                        val = val.decode('utf-8')      
+                        #print("third===", key1 , val) 
+                        dict1[key1] = val
+                retval.data[key] = dict1 
+            elif type(value) == list:
+                list1 = []
+                for i in range(len(value)):
+                    if type(value[i]) == list:
+                        list2 = []
+                        for k in range(len(value[i])):
+                            value[i][k] = value[i][k].decode('utf-8')
+                            #print("fourth===", key , value[i][k])
+                            list2.append(value[i][k])
+                        list1.append(list2)
+                        retval.data[key] = list1
+                    else:
+                        value[i] = value[i].decode('utf-8')   
+                        #print("fifth===", key , value[i])
+                        list1.append(value[i])
+                        retval.data[key] = list1
+            else:
+                value = value.decode('utf-8')      
+                #print("first===", key , value)              
+                retval.data[key] = value
+
+
 
     vals = []
     lofl = []

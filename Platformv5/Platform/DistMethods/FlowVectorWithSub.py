@@ -1,6 +1,7 @@
 from Utilities.Const import *
 from Utilities.FileUtil import expprint
 import math
+from twisted.python.compat import xrange            ##added import
 
 def getRedistDict_Flow(VCont, n_keys, n_benches, bench_tot, n_queuelens, queuelen_tot, n_subqvals, subqval_tot):
 
@@ -79,7 +80,8 @@ def getRedistDict_Flow(VCont, n_keys, n_benches, bench_tot, n_queuelens, queuele
         extra = extra + val - math.floor(val)
     ind = 0
     
-    for val in sorted(dict_of_fract.items(), key=lambda (key,value): value):
+    #for val in sorted(dict_of_fract.items(), key=lambda (key,value): value):                     ##python2
+    for val in sorted(dict_of_fract.items(), key=lambda key_value: key_value[1]):                 ##python3
         if(extra < 1):
             break
         dict_to_return[val[0]] = dict_to_return[val[0]] + 1

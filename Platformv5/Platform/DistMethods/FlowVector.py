@@ -1,6 +1,7 @@
 from Utilities.Const import *
 from Utilities.FileUtil import expprint
 import math
+from twisted.python.compat import xrange                       ##added import
 
 def getTGRedistDict_Flow(VCont, n_keys, n_benches, bench_tot, n_tgsets):
     sv = VCont.getStasisVector()
@@ -120,7 +121,8 @@ def getTGRedistDict_Flow(VCont, n_keys, n_benches, bench_tot, n_tgsets):
                 extra = extra + val - math.floor(val)
             ind = 0
 
-            ds = sorted(dict_of_fract.items(), reverse=True, key=lambda (key,value):value)
+            #ds = sorted(dict_of_fract.items(), reverse=True, key=lambda (key,value):value)            ##python2
+            ds = sorted(dict_of_fract.items(), reverse=True, key=lambda key_value: key_value[1])       ##python3
             dbgprint("DS:"+str(ds))
             for val in ds:
                 if(extra < 1):
@@ -222,7 +224,8 @@ def getRedistDict_Flow(
         extra = extra + val - math.floor(val)
     ind = 0
 
-    ds = sorted(dict_of_fract.items(), reverse=True, key=lambda (key,value):value)
+    #ds = sorted(dict_of_fract.items(), reverse=True, key=lambda (key,value):value)                      ##python2
+    ds = sorted(dict_of_fract.items(), reverse=True, key=lambda key_value: key_value[1])                ##python3
     dbgprint("DS:"+str(ds))
     for val in ds:
         if(extra < 1):

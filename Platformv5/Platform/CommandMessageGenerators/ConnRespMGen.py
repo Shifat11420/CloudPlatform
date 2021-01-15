@@ -18,7 +18,7 @@ class ConnTestMGen(MessageGenerator):
         self.countdown = 100
 
     def reset(self):
-	MessageGenerator.reset(self)
+        MessageGenerator.reset(self)
         self.finished = False
         self.firsttime = True
 

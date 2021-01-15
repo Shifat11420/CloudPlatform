@@ -5,13 +5,13 @@ from Utilities.Const import *
 
 class ContainerResponseReader(TCPReader):
     def HandleLine(self, line):
-        vals = line.split(COMMA)
+        vals = line.split(COMMA.encode('utf-8'))
         i = 1
         for val in vals:
-            if(val == FILENAME):
-                filename = vals[i]
-            if(val == ID):
-                idstr = vals[i]
+            if(val.decode('utf-8') == FILENAME):
+                filename = vals[i].decode('utf-8')
+            if(val.decode('utf-8') == ID):
+                idstr = vals[i].decode('utf-8')
             i = i + 1
         self.context.AddCompletedWorkFile(idstr, filename)
 
@@ -20,11 +20,11 @@ class ContainerResponseReader(TCPReader):
 
 class ContainerQueueReader(TCPReader):
     def HandleLine(self, line):
-        vals = line.split(COMMA)
+        vals = line.split(COMMA).encode('utf-8')
         i = 1
         for val in vals:
-            if(val == ID):
-                self.context.MoveWorkToRealQueue(vals[i])
+            if(val.decode('utf-8') == ID):
+                self.context.MoveWorkToRealQueue(vals[i].decode('utf-8'))
             i = i + 1
         self.finished = True
 
@@ -37,31 +37,31 @@ class ContainerQueueReader(TCPReader):
 class ContainerReader(TCPReader):
 
     def HandleLine(self, line):
-        vals = line.split(COMMA)
+        vals = line.split(COMMA.encode('utf-8'))
         i = 1
 
         new_cont_args = None
         self.filecount = 0
         filenames = []
         for val in vals:
-            if(val == ARGS):
-                new_cont_args = vals[i]
-            elif(val == FILECOUNT):
-                self.filecount = int(vals[i])
-            elif(val == ID):
-                new_id = vals[i]
-            elif(val == SOURCEIP):
-                source_ip = vals[i]
-            elif(val == ISDOCKER):
-                if(vals[i] == "True"):
+            if(val.decode('utf-8') == ARGS):
+                new_cont_args = vals[i].decode('utf-8')
+            elif(val.decode('utf-8') == FILECOUNT):
+                self.filecount = int(vals[i].decode('utf-8'))
+            elif(val.decode('utf-8') == ID):
+                new_id = vals[i].decode('utf-8')
+            elif(val.decode('utf-8') == SOURCEIP):
+                source_ip = vals[i].decode('utf-8')
+            elif(val.decode('utf-8') == ISDOCKER):
+                if(vals[i].decode('utf-8') == "True"):
                     isdocker = True
                 else:
                     isdocker = False
-            elif(val == SOURCEPORT):
-                source_port = vals[i]
-            elif(val == FILENAMES):
+            elif(val.decode('utf-8') == SOURCEPORT):
+                source_port = vals[i].decode('utf-8')
+            elif(val.decode('utf-8')== FILENAMES):
                 for j in range(i, len(vals)):
-                    filenames.append(vals[j])
+                    filenames.append(vals[j].decode('utf-8'))
             i = i + 1
         self.ContainerMgr = ContainerManager(new_cont_args, LocalizeFileNames(filenames), new_id, source_ip, source_port, isdocker, self.context)
         self.context.AddIncomingWork(self.ContainerMgr)

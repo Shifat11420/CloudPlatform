@@ -1,4 +1,7 @@
 from Utilities.Const import *
+from pyparsing import basestring
+#from numpy.compat import basestring
+
 
 class MessageGenerator():
     def __init__(self, in_context):
@@ -30,7 +33,7 @@ class MessageGenerator():
     def WriteResponse(self, transp):
         val = self.read()
         while(val != None):
-            transp.write(val)
+            transp.write(val.encode('utf-8'))
             val = self.read()
 
 class ComboMessageGenerator(MessageGenerator):
@@ -50,23 +53,23 @@ class ComboMessageGenerator(MessageGenerator):
         return val
    
     def reset(self):
-	MessageGenerator.reset(self)
-	for agen in self.subgens:
-	    agen.reset()
-	self.genindex = 0
+        MessageGenerator.reset(self)
+        for agen in self.subgens:
+            agen.reset()
+        self.genindex = 0
 
 class StringMessageGenerator(MessageGenerator):
     def __init__(self, msgstr, in_context):
         MessageGenerator.__init__(self, in_context)
         self.msg = msgstr
-	self.initmsg = msgstr
+        self.initmsg = msgstr
 
     def clone(self):
         return StringMessageGenerator(self.initmsg, self.context)
 
     def read(self):
         if(self.msg == None):return None
-        if(not isinstance(self.msg, basestring)):
+        if(not isinstance(self.msg, basestring)):                          ##added self with basestring
             dbgprint("DANGER:"+str(self.msg))
         dbgprint("Sending Msg: " + self.msg)
         tosend = self.msg
@@ -76,8 +79,8 @@ class StringMessageGenerator(MessageGenerator):
         return tosend
 
     def reset(self):
-	MessageGenerator.reset(self)
-	self.msg = self.initmsg
+        MessageGenerator.reset(self)
+        self.msg = self.initmsg
 
 class TerminateMessageGenerator(StringMessageGenerator):
     def __init__(self, in_context):

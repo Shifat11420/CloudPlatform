@@ -32,7 +32,7 @@ class ExpPlatformManager(PlatformManager):
         dbgprint("Created Exp PM")
 
     def ExpManagerRun(self):
-        from Utilities.Const import *
+        #from Utilities.Const import *                               ##
         from datetime import datetime, timedelta
         dbgprint("EMR: " + str(self.exp_nodes_reported) + ":" + str(self.expdef is None))
         if(self.exp_nodes_reported or self.expdef is None):
@@ -50,7 +50,7 @@ class ExpPlatformManager(PlatformManager):
     def ManagerThreadRun(self):
         import time
         from datetime import datetime, timedelta
-        from Utilities.Const import *
+        #from Utilities.Const import *                     ##
         dbgprint("good way")
         self.terminate = False
         time.sleep(1)
@@ -88,13 +88,13 @@ class ExpPlatformManager(PlatformManager):
                 self.ExpManagerRun()
 
     def AddExpNode(self, newid, newip, newport):
-        from Utilities.Const import *
+        #from Utilities.Const import *                   ##
         from Utilities.Location import Location
         with self.expnodeslock:
             self.expnodes[newid] =Location(newip, newport)
 
     def startExperiment(self):
-        from Utilities.Const import *
+        #from Utilities.Const import *                     ##
         from datetime import datetime, timedelta
         from Utilities.FileUtil import SetOutputFolder, expprint
         from CommandMessageGenerators.PauseUnpauseMessageGenerator import TimeUnpauseMessageGenerator
@@ -123,7 +123,7 @@ class ExpPlatformManager(PlatformManager):
             #reactor.connectTCP(loc.ip, loc.port, fact)
 
     def TerminateAll(self):
-        from Utilities.Const import *
+        #from Utilities.Const import *                         ##
         #reactor.callFromThread(self.TerminateAllIRT)
     
         with self.expnodeslock:
@@ -146,7 +146,7 @@ if __name__ == "__main__":
         setDbg(True)
     else:
         setDbg(False)
-    print "Debug is "+str(DEBUG)
+    print ("Debug is "+str(DEBUG))                     ##
     expdef = BuildExpDef(expfilename, expindex)
     if(expdef is None):
         dbgprint("EXP Busted")

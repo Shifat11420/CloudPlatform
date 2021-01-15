@@ -1,17 +1,19 @@
 
-    
+from Utilities.Const import *    
+from CommandMessageGenerators.MessageGenerator import StringMessageGenerator
+
 class NewLeaderAcceptReader(TCPReader):
     def HandleLine(self, data):
         
-        vals = data.split(COMMA)
-        fid = vals[1]
+        vals = data.split(COMMA.encode('utf-8'))
+        fid = vals[1].decode('utf-8')
 
         self.context.SetFollower(fid)
 
 class NewLeaderRejectReader(TCPReader):
     def HandleLine(self, data):
-        vals = data.split(COMMA)
-        fid = vals[1]
+        vals = data.split(COMMA.encode('utf-8'))
+        fid = vals[1].decode('utf-8')
         self.context.RejectFollower(fid)
 class TaskGraphLinksMG(StringMessageGenerator):
     def __init__(self, in_context, taskgraphid, taskgraphasstr):
