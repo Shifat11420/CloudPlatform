@@ -14,7 +14,7 @@ import datetime
 import sys
 from PlatformManager import PlatformManager
 from DockerManagers.NasManager import GetRValueFromNAS
-from tcp_latency import measure_latency
+#from tcp_latency import measure_latency
 
 DEFAULTBENCHTIME = 400
 

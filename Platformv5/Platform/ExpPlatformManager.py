@@ -103,7 +103,7 @@ class ExpPlatformManager(PlatformManager):
             dbgprint("EPM:before sleep")
             time.sleep(30)
             dbgprint("EPM:After Sleep")
-            dtstart = datetime.now()+timedelta(0,20)
+            dtstart = datetime.now()+timedelta(0,20)                             
             expprint("EXPSTARTTIME!!:"+str(dtstart))
             for key in self.expnodes:
                 loc = self.expnodes[key]
@@ -135,13 +135,16 @@ class ExpPlatformManager(PlatformManager):
         
 if __name__ == "__main__":
     global DEBUG
+    print (sys.argv)
     argsFIP = ArgFIP(sys.argv)
-    source_ip = argsFIP[DICT_SOURCE_IP]
-    port = int(argsFIP[DICT_SOURCE_PORT])
-    SetOutputFolder(argsFIP[DICT_FOLDER])
-    expfilename = argsFIP[DICT_EXP_FILE]
-    dbg = argsFIP[DICT_DEBUG]
-    expindex = argsFIP[DICT_EXP_INDEX]
+    source_ip = argsFIP.get(DICT_SOURCE_IP)               ##
+    port = int(argsFIP.get(DICT_SOURCE_PORT))             ##
+    SetOutputFolder(argsFIP.get(DICT_FOLDER))             ##
+    #expfilename = argsFIP[DICT_EXP_FILE]
+    expfilename = argsFIP.get(DICT_EXP_FILE)              ##
+    dbg = argsFIP.get(DICT_DEBUG)                         ##
+    expindex = argsFIP.get(DICT_EXP_INDEX)                ##
+    print (argsFIP)
     if(dbg == "True"):
         setDbg(True)
     else:

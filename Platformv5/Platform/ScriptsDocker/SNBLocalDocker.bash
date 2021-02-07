@@ -11,8 +11,10 @@
 # parameterized.
 
 # docker run --net="host" --privileged bpete16/distplatform:4.60 \
-#        bash Platform/ScriptsDocker/StartNBenchPM.bash \
+#        bash Platform/ScriptsDocker/StartNTGPM.bash \
 #        3 127.0.0.1 15000 11000 lo True 127.0
-docker run --net="host" --privileged bpete16/distplatform:4.60 \
-       bash Platform/ScriptsDocker/StartNTGPM.bash \
-       3 127.0.0.1 15000 11000 lo True 127.0
+
+
+# bash Platform/ScriptsDocker/StartNBenchPM.bash 5 127.0.0.1 15000 11000 lo True 127.0
+
+docker run --net="host" --privileged bpete16/distplatform:4.60 bash Platform/ScriptsDocker/StartNBenchPM.bash 5 127.0.0.1 15000 11000 lo True 127.0

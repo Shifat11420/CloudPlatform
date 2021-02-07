@@ -1,4 +1,4 @@
-from FileInputTokenize import KeyedFIP
+from .FileInputTokenize import KeyedFIP
 
 kf = KeyedFIP("testfile.txt")
 

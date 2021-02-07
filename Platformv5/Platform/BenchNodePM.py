@@ -217,13 +217,14 @@ if __name__ == "__main__":
     global DEBUG
     argsFIP = ArgFIP(sys.argv)
     print (sys.argv)                                            ##
-    source_ip = argsFIP[DICT_SOURCE_IP]
-    port = int(argsFIP[DICT_SOURCE_PORT])
-    SetOutputFolder(argsFIP[DICT_FOLDER])
-    exp_ip = argsFIP[DICT_EXP_IP]
-    exp_port = argsFIP[DICT_EXP_PORT]
+    source_ip = argsFIP.get(DICT_SOURCE_IP)
+    port = int(argsFIP.get(DICT_SOURCE_PORT))
+    SetOutputFolder(argsFIP.get(DICT_FOLDER))
+    #exp_ip = argsFIP[DICT_EXP_IP]
+    exp_ip = argsFIP.get(DICT_EXP_IP)
+    exp_port = argsFIP.get(DICT_EXP_PORT)
     print (argsFIP)                                    ##
-    dbg = argsFIP[DICT_DEBUG]
+    dbg = argsFIP.get(DICT_DEBUG)
     if(dbg == "True"):
         setDbg(True)
     else:

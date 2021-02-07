@@ -8,7 +8,7 @@ from Utilities.jsonfixer import aload
 from Utilities.Const import *
 from DockerManagers.SubContManager import ContainerManager
 from DockerManagers.TGManager import TGManager
-from twisted.python.compat import xrange                              ##added import
+#from twisted.python.compat import xrange                              ##added import
 from numpy.random.tests import data                                   ##added import
 from ExpDefinitions.BenchDefinition import BenchDefinition            ##added import
 
@@ -34,7 +34,7 @@ class TaskGraphDefinition():
             nids = []
             for nid in expnodes:
                 nids.append(nid)
-            for i in xrange(0, len(self.graph)):
+            for i in range(0, len(self.graph)):                        ##xrange in python2 to range in python3
                 neighbors = self.graph[i]
                 mgens = []
                 for neigh in neighbors:
@@ -133,7 +133,7 @@ def benchBuildFromFile(in_filename):
     for alloc in retval.data['work_alloc']:
         nodeind = int(alloc[0])
         retval.work_alloc[nodeind] = []
-        for val in xrange(1, len(alloc)):
+        for val in range(1, len(alloc)):                             ## python 2 xrange to python3 range
             retval.work_alloc[nodeind].append(alloc[val])
     return retval
     #retval.graph.append([int(x) for x in retval.data['graph']

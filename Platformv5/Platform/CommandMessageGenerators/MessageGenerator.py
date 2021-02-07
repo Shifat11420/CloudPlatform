@@ -1,6 +1,4 @@
 from Utilities.Const import *
-from pyparsing import basestring
-#from numpy.compat import basestring
 
 
 class MessageGenerator():
@@ -69,8 +67,14 @@ class StringMessageGenerator(MessageGenerator):
 
     def read(self):
         if(self.msg == None):return None
-        if(not isinstance(self.msg, basestring)):                          ##added self with basestring
-            dbgprint("DANGER:"+str(self.msg))
+        #if(not isinstance(self.msg, basestring)):                          ##added self with basestring
+        #    dbgprint("DANGER:"+str(self.msg))                              ##
+
+        if(not isinstance(self.msg, bytes) and not isinstance(self.msg, str)):                          ##added basestring alternatives for python 3. Python 3 does not support basestring,
+            print("DANGER:"+str(self.msg))                                                              ## it's either bytes or str 
+
+        if(isinstance(self.msg, bytes)):                                                                ## if it's a byte, decode it to str
+            msg=msg.decode('utf-8')                                                                     ##
         dbgprint("Sending Msg: " + self.msg)
         tosend = self.msg
         if(not tosend.endswith(LINEDELIM)):

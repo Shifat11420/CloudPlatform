@@ -7,8 +7,8 @@ import json
 from Utilities.jsonfixer import aload
 from Utilities.Const import *
 from DockerManagers.SubContManager import ContainerManager
-from twisted.python.compat import xrange                    ##added import
-from numpy.random.tests import data                         ##added import
+#from twisted.python.compat import xrange                    ##added import
+#from numpy.random.tests import data                         ##added import
 
 class BenchDefinition():
     def __init__(self):
@@ -32,7 +32,7 @@ class BenchDefinition():
             nids = []
             for nid in expnodes:
                 nids.append(nid)
-            for i in xrange(0, len(self.graph)):
+            for i in range(0, len(self.graph)):          ##xrange in python2 changed to range in python3
                 neighbors = self.graph[i]
                 mgens = []
                 for neigh in neighbors:
@@ -95,7 +95,7 @@ def benchBuildFromFile(in_filename):
         bytedata = aload(jfile.read())
     if(bytedata is None):return None
 
-
+    ##json file inputs taken and loop over every element and decoded
     data = {}
 
     for key, value in bytedata.items():
@@ -181,7 +181,7 @@ def benchBuildFromFile(in_filename):
     for alloc in retval.data['work_alloc']:
         nodeind = int(alloc[0])
         retval.work_alloc[nodeind] = []
-        for val in xrange(1, len(alloc)):
+        for val in range(1, len(alloc)):
             retval.work_alloc[nodeind].append(alloc[val])
     return retval
     #retval.graph.append([int(x) for x in retval.data['graph']
