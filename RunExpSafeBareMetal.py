@@ -5,8 +5,8 @@ import time
 #import random
 from GrabAllLogs import PullAllMchnFiles
 
-remotedir = "/users/gb"
-remotenet = "eno2"
+remotedir = "/home/shifat"
+remotenet = "enp24s0f1"
 
 distplatform = "bpete16/distplatform"
 platformdir = "Platformv5"
@@ -84,7 +84,7 @@ def runNodes(host, port, version, numnodes, ipc, portc, startport, dockerfile, i
     cscmd = ""
     if not cpuset == "x":
         cscmd = '--cpuset-cpus="'+cpuset+'"'
-    cmd = 'docker run '+cscmd+' --net="host" --name="'+contname+'" --privileged '+distplatform+':'+str(version)+' /bin/bash Platform/ScriptsDocker/' +bashfile + ' ' + str(numnodes) + ' ' + str(ipc) + ' ' + str(portc) + ' ' + str(startport) + ' ' + remotenet + ' '+debug+' ' + ipprefix + ' &>'+outfname+' &'
+    cmd = 'docker run -t -d '+cscmd+' --net="host" --name="'+contname+'" --privileged '+distplatform+':'+str(version)+' bash -c "Platform/ScriptsDocker/' +bashfile + ' ' + str(numnodes) + ' ' + str(ipc) + ' ' + str(portc) + ' ' + str(startport) + ' ' + remotenet + ' '+debug+' ' + ipprefix + '&>'+outfname+' ; while true; do sleep 10; done" &'
 
     sshcommand(host, port, cmd)
     print("COMMANDNODES:"+cmd)

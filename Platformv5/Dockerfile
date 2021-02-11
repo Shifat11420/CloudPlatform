@@ -14,6 +14,7 @@ RUN apt install python3.8 -y
 RUN ln -s /usr/bin/pip3 /usr/bin/pip
 RUN ln -s /usr/bin/python3.8 /usr/bin/python
 
+RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
 RUN apt-get update && apt-get install -y net-tools
 RUN apt-get update && apt-get install -y python3-twisted
 RUN apt-get update && apt-get install -y fort77

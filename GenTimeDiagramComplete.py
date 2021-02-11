@@ -6,7 +6,7 @@ import sys
 #import math
 
 def PlotData(data, outfile, gkey=None, datakeys=None):
-    tvals = range(0,399)  # original range(0,400) caused exception in ax1.fill_between(), since low and high are of range(399)
+    tvals = range(0,400)  # original range(0,400) caused exception in ax1.fill_between(), since low and high are of range(399)
     tmarks = [0,100,200,300,400]
     fig, ax1 = plt.subplots(1,1)
     #axall = [ax1, ax2, ax3, ax4]

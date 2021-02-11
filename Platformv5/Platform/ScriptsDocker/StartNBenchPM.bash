@@ -34,12 +34,12 @@ function startone {
    # usage: startone ip port eip eport debug
    echo "Server at "$1":"$2
    echo "Exp at "$3":"$4
-   echo "docker run --net="host" --privileged bpete16/distplatform:4.60 \\"
    echo "python3 Platform/BenchNodePM.py Source_IP=$1 Source_Port=$2 \\"
    echo "       Exp_IP=$3 Exp_Port=$4 Debug=$5 &> output$2.txt &"
-   # docker run --net="host" --privileged bpete16/distplatform:4.60 \
-   #    python3 Platform/BenchNodePM.py "Source_IP=$1" "Source_Port=$2" "Exp_IP=$3" "Exp_Port=$4" "Debug=$5" &> output$2.txt &
-   python3 Platform/BenchNodePM.py "Source_IP=$1" "Source_Port=$2" "Exp_IP=$3" "Exp_Port=$4" "Debug=$5" &> output$2.txt &
+   echo $PATH
+   ls -l /usr/bin/python*
+   whereis python3
+   python Platform/BenchNodePM.py "Source_IP=$1" "Source_Port=$2" "Exp_IP=$3" "Exp_Port=$4" "Debug=$5" &> output$2.txt &
    echo $?
    ps aux | grep python
 }
