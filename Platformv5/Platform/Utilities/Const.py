@@ -84,6 +84,9 @@ COMMAND_ASKFORWORK = "AskForWork"
 COMMAND_CONTAINERRESPONSE = "ContainerResponse"
 
 COMMAND_RECEIVEEXPNODE = "ReceiveExpNode"
+COMMAND_LATENCYREPORTNODE = "LatencyReportNode"               ##
+
+
 
 COMMAND_GETBENCH = "GetBench"
 COMMAND_RECEIVEBENCH = "ReceiveBench"
@@ -120,6 +123,12 @@ IPLOCATION = "localhost"
 STR_IP = "IP"
 STR_PORT = "PORT"
 STR_ID = "ID"
+
+SLOWESTNODE = "SlowestNode"                           ##
+SLOWEST_ID = "Slowest_ID"             ##
+#SLOWEST_IP = "Slowest_IP"             ##
+#SLOWEST_PORT = "Slowest_Port"         ##
+MAX_LATENCY = "Maximum Latency"       ##
 
 IMAGE = "Image"
 COMMAND = "Command"

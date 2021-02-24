@@ -6,6 +6,7 @@ from CommandReaders.HelloReader import HelloReader, HelloResponder, TerminateRea
 from CommandReaders.TCPFileReader import TCPFileReader
 from CommandReaders.AskForWorkReader import AskForWorkReader
 from CommandReaders.ExperimentControlReader import ReceiveExpNodeReader
+from CommandReaders.LatencyReportReader import LatencyReportReader
 from CommandReaders.BenchReader import SendBenchReader, ReceiveBenchReader
 from CommandReaders.QueueLenReader import SendQueueLenReader, ReceiveQueueLenReader, RecieveExpectCompTime
 from CommandReaders.SendLogsReader import SendLogsReader, ReceiveLogsReader
@@ -83,6 +84,9 @@ class ReaderFactory():
             return ConnTestReader(self.context)
         if(name.startswith(COMMAND_CONNRESP.encode('utf-8'))):
             return ConnRespReader(self.context)
+
+        if(name.startswith(COMMAND_LATENCYREPORTNODE.encode('utf-8'))):                     ##
+    	    return LatencyReportReader(self.context)                                     ##
 
         
         if(name.startswith(COMMAND_DYNTASKOBLIG.encode('utf-8'))):

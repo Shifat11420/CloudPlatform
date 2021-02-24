@@ -5,6 +5,7 @@ from MessageManagers.SendMessage import MessageSenderFactory
 from CommandMessageGenerators.MessageGenerator import StringMessageGenerator
 from CommandMessageGenerators.MessageRepeat import MsgMonitor
 from CommandMessageGenerators.ExpMessageGenerator import ReceiveExpNode
+from CommandMessageGenerators.LatencyReportGenerator import LatencyReportNode
 from CommandMessageGenerators.PauseUnpauseMessageGenerator import TimeUnpauseMessageGenerator
 from ExpDefinitions.ExpFactory import BuildExpDef
 from Utilities.Const import *
@@ -92,6 +93,22 @@ class ExpPlatformManager(PlatformManager):
         from Utilities.Location import Location
         with self.expnodeslock:
             self.expnodes[newid] =Location(newip, newport)
+
+    def LatencyReportExpNode(self, node_id, node_ip, node_port, slowest_id, max_latency):   
+        listoflatencies = []
+        with self.expnodeslock:
+            for key in self.expnodes:
+                loc = self.expnodes[key]             
+                #dbgprint("Sending a command to remove slowest node:"+str(loc))                  
+                if key == slowest_id:
+                    listoflatencies.append(max_latency)
+                    dbgprint("Delete node, ID : "+str(key)+" IP : "+str(loc.ip)+" Port : "+str(loc.port)) 
+            dbgprint("List of latencies : "+str(listoflatencies))  
+            listoflatencies = [x for x in listoflatencies]
+            listoflatencies.sort(reverse=True)
+            sortedlist = [x for x in listoflatencies]  
+            dbgprint("Sorted list of latencies : "+str(listoflatencies))       
+
 
     def startExperiment(self):
         #from Utilities.Const import *                     ##

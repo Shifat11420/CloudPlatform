@@ -18,9 +18,7 @@ function startone {
     echo "python Platform/ExpPlatformManager.py \\"
     echo "       Source_IP=$1 Source_Port=$2 \\"
     echo "       Exp_File=$3 Debug=True Exp_Index=0"
-    python Platform/ExpPlatformManager.py \
-	   "Source_IP=$1" "Source_Port=$2" \
-	   "Exp_File=$3" "Debug=True" "Exp_Index=0"
+    python3 Platform/ExpPlatformManager.py "Source_IP=$1" "Source_Port=$2" "Exp_File=$3" "Debug=True" "Exp_Index=0" &> outputExpLocal.txt
 }
 
 # Find IP address
