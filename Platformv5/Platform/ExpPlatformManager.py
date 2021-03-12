@@ -16,7 +16,12 @@ from datetime import datetime, timedelta
 import threading
 import time
 import sys
+import os              ##
 from PlatformManager import PlatformManager
+
+host = 'lo'
+delay = '100ms'
+
 
 class ExpPlatformManager(PlatformManager):
     def __init__(self, in_my_IP, in_my_Port, in_expdef, ManagerOn=True):
@@ -93,21 +98,52 @@ class ExpPlatformManager(PlatformManager):
         from Utilities.Location import Location
         with self.expnodeslock:
             self.expnodes[newid] =Location(newip, newport)
+        
+
 
     def LatencyReportExpNode(self, node_id, node_ip, node_port, slowest_id, max_latency):   
         listoflatencies = []
         with self.expnodeslock:
             for key in self.expnodes:
-                loc = self.expnodes[key]             
-                #dbgprint("Sending a command to remove slowest node:"+str(loc))                  
+                loc = self.expnodes[key]                    
                 if key == slowest_id:
                     listoflatencies.append(max_latency)
-                    dbgprint("Delete node, ID : "+str(key)+" IP : "+str(loc.ip)+" Port : "+str(loc.port)) 
+                    dbgprint("Slowest communication link with node, ID : "+str(key)+" IP : "+str(loc.ip)+" Port : "+str(loc.port)) 
             dbgprint("List of latencies : "+str(listoflatencies))  
             listoflatencies = [x for x in listoflatencies]
             listoflatencies.sort(reverse=True)
             sortedlist = [x for x in listoflatencies]  
             dbgprint("Sorted list of latencies : "+str(listoflatencies))       
+
+
+
+    def BenchReportExpNode(self, node_id, node_ip, node_port, id_maxBench, max_Bench):  
+        listofbenches = []
+        portlist = []
+        #n=1
+        with self.expnodeslock:
+            for key in self.expnodes:
+                loc = self.expnodes[key]             
+                #dbgprint("Sending a command to remove slowest node:"+str(loc))                               
+                if key == id_maxBench:
+                    # dbgprint("before while")
+                    # while n>0:  
+                        #dbgprint("after while")
+                    listofbenches.append(max_Bench)
+                    dbgprint("Lowest performing node, ID : "+str(key)+" IP : "+str(loc.ip)+" Port : "+str(loc.port)+" with BENCH = "+str(max_Bench) )
+                    portlist.append(loc.port)
+                    dbgprint("Port List before artificial delay : "+str(portlist)+" from port "+str(node_ip))
+                        # # for iport in range(len(portlist)):
+                        # #     if not portlist[iport]==loc.port:
+                        # #         portlist.append(loc.port)
+                        # #         dbgprint("Port List : ",portlist)
+
+                        # dbgprint("Making communication with lowest performing node "+str(loc.port)+" artificially slower")
+                        # os.system('sudo tc qdisc add dev {0} root handle 1: prio priomap 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0'.format(host, loc.port, loc.port, delay))
+                        # os.system('sudo tc qdisc add dev {0} parent 1:2 handle 20: netem delay {3}'.format(host, loc.port, loc.port, delay))
+                        # os.system('sudo tc filter add dev {0} parent 1:0 protocol ip u32 match ip sport {1} 0xffff flowid 1:2'.format(host, loc.port, loc.port, delay))  
+                        # n=0      
+            #os.system('sudo tc qdisc del dev lo root')    #to delete the delay       
 
 
     def startExperiment(self):
@@ -126,6 +162,15 @@ class ExpPlatformManager(PlatformManager):
                 loc = self.expnodes[key]
                 upmg = TimeUnpauseMessageGenerator(self, dtstart)
                 self.msgmon.sendGen(upmg, loc.ip, loc.port)
+                ##########################
+                # dbgprint("locport : "+str(loc.port))
+                # if loc.port == 20003:
+                #     dbgprint("locport before slowing down : "+str(loc.port))
+                #     os.system('sudo tc qdisc add dev {0} root handle 1: prio priomap 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0'.format(host, loc.port, loc.port, delay))
+                #     os.system('sudo tc qdisc add dev {0} parent 1:2 handle 20: netem delay {3}'.format(host, loc.port, loc.port, delay))
+                #     os.system('sudo tc filter add dev {0} parent 1:0 protocol ip u32 match ip sport {1} 0xffff flowid 1:2'.format(host, loc.port, loc.port, delay))
+                #     dbgprint("locport after slowing down : "+str(loc.port))
+                ############################
 
     def GatherLogs(self):
         with self.expnodeslock:

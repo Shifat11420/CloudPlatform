@@ -34,13 +34,13 @@ function startone {
    # usage: startone ip port eip eport debug
    echo "Server at "$1":"$2
    echo "Exp at "$3":"$4
-   echo "python3 Platform/BenchNodePM.py Source_IP=$1 Source_Port=$2 \\"
+   echo "python Platform/BenchNodePM.py Source_IP=$1 Source_Port=$2 \\"
    echo "       Exp_IP=$3 Exp_Port=$4 Debug=$5 &> output$2.txt &"
-   echo $PATH
-   ls -l /usr/bin/python*
-   whereis python3
-   python Platform/BenchNodePM.py "Source_IP=$1" "Source_Port=$2" "Exp_IP=$3" "Exp_Port=$4" "Debug=$5" &> output$2.txt &
-   echo $?
+   #echo $PATH
+   #ls -l /usr/bin/python*
+   #whereis python3
+   python3 Platform/BenchNodePM.py "Source_IP=$1" "Source_Port=$2" "Exp_IP=$3" "Exp_Port=$4" "Debug=$5" &> output$2full.txt &
+   #echo $?
    ps aux | grep python
 }
 

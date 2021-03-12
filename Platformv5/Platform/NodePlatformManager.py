@@ -27,6 +27,13 @@ avgLatencyList = []
 
 
 
+# host = 'lo'
+# sport = '20000'
+# dport = '20003'
+# delay = '1000ms'
+
+
+
 class NodePlatformManager(PlatformManager):
     def __init__(self, in_my_IP, in_my_Port, exp_ip, exp_port, ManagerOn=True):
         PlatformManager.__init__(self, in_my_IP, in_my_Port)
@@ -185,18 +192,11 @@ class NodePlatformManager(PlatformManager):
         expprint("Sending To Exp at:"+str(self.Exp_IP)+":"+str(self.Exp_Port))
         self.msgmon.sendGen(mgen, self.Exp_IP, self.Exp_Port)
 
-    # def LatencyReportToExp(self):
-    #     mgen = LatencyReportNode(self, self.idval, self.IP, self.Port, id_maxlatency, max_latency )
-    #     dbgprint("Sending Latency Report To Exp at:"+str(self.Exp_IP)+":"+str(self.Exp_Port))
-    #     expprint("Sending Latency Report To Exp at:"+str(self.Exp_IP)+":"+str(self.Exp_Port))
-    #     self.msgmon.sendGen(mgen, self.Exp_IP, self.Exp_Port)
-
-
     def ManagerThreadRun(self):
         self.terminate = False
         time.sleep(1)
         self.ReportToExp()
-        n=1
+        #n=1
 
         
         while(True):
@@ -211,45 +211,55 @@ class NodePlatformManager(PlatformManager):
                 dbgprint("mgr_on")
 
                 #######################################                
-                while (n>0):
-                    dbgprint("mgr_on for latency test")
-                
-                    with self.neighborInfoLock:
-                        for nid in self.neighborInfos:
-                            vals = self.neighborInfos[nid]
-                            dbgprint("Selfid: "+str(self.idval)+" Neighbor , ID : "+str(nid)+ " IP address: "+str(vals[0])+" Port :"+ str(vals[1]))
-                                
-                            LatencyList = measure_latency(vals[0], vals[1], runs, timeout)
-                            summ = 0.0
-                            for i in range(len(LatencyList)):
-                                summ = summ + LatencyList[i]
-                            avgLatency = summ/runs                        
-                            dbgprint("Average communication latency of neighbor : ID : "+str(nid)+" IP : "+str(vals[0])+" PORT : "+str(vals[1])+" is "+str(avgLatency))
+                #while (n>0):
+                dbgprint("mgr_on for latency test")
+            
+                with self.neighborInfoLock:
+                    for nid in self.neighborInfos:
+                        vals = self.neighborInfos[nid]
+                        dbgprint("Selfid: "+str(self.idval)+" Neighbor , ID : "+str(nid)+ " IP address: "+str(vals[0])+" Port :"+ str(vals[1]))
 
-                            if nid in NeighborsLatencyDict:
-                                NeighborsLatencyDict[nid].append(avgLatency)
-                            else:
-                                NeighborsLatencyDict.update({nid:[avgLatency]})   
-                            dbgprint("Neighbors Latency Dict  : "+str(NeighborsLatencyDict))
-                            
-                            NeighborsLatencyList.append(avgLatency)
-                            dbgprint("Neighbors Latency List : "+str(NeighborsLatencyList))
-                            max_latency = max(NeighborsLatencyList)
+                        # dbgprint("locport b4 : "+str(vals[1]))
+                        # if vals[1] == 20000:
+                        #     dbgprint("locport after : "+str(vals[1]))
+                        #     os.system('sudo tc qdisc add dev {0} root handle 1: prio priomap 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0'.format(host, vals[1], dport, delay))
+                        #     os.system('sudo tc qdisc add dev {0} parent 1:2 handle 20: netem delay {3}'.format(host, vals[1], dport, delay))
+                        #     os.system('sudo tc filter add dev {0} parent 1:0 protocol ip u32 match ip sport {1} 0xffff flowid 1:2'.format(host, vals[1], dport, delay))
+                        #     os.system('sudo tc filter add dev {0} parent 1:0 protocol ip u32 match ip dport {2} 0xffff flowid 1:2'.format(host, vals[1], dport, delay))
 
-                            for key in NeighborsLatencyDict:
-                                for x in range(len(NeighborsLatencyDict[key])):
-                                    if max_latency == NeighborsLatencyDict[key][x]:
-                                        id_maxlatency = key
-                                        print("key  =  ", key)
-                            
-                        dbgprint("Maximum communication latency : "+str(max_latency)+" for ID "+str(id_maxlatency))
+                        LatencyList = measure_latency(vals[0], vals[1], runs, timeout)
+                        summ = 0.0
+                        for i in range(len(LatencyList)):
+                            summ = summ + LatencyList[i]
+                        avgLatency = summ/runs                        
+                        dbgprint("Average communication latency of neighbor : ID : "+str(nid)+" IP : "+str(vals[0])+" PORT : "+str(vals[1])+" is "+str(avgLatency))
+
+                        if nid in NeighborsLatencyDict:
+                            NeighborsLatencyDict[nid].append(avgLatency)
+                        else:
+                            NeighborsLatencyDict.update({nid:[avgLatency]})   
+                        dbgprint("Neighbors Latency Dict  : "+str(NeighborsLatencyDict))
                         
-                        mgen = LatencyReportNode(self, self.idval, self.IP, self.Port, id_maxlatency, max_latency )
-                        dbgprint("Sending Latency Report To Exp at: "+str(self.Exp_IP)+":"+str(self.Exp_Port))
-                        expprint("Sending Latency Report To Exp at: "+str(self.Exp_IP)+":"+str(self.Exp_Port))
-                        self.msgmon.sendGen(mgen, self.Exp_IP, self.Exp_Port)   
-                        n=0                        
-                    ##############################            
+                        NeighborsLatencyList.append(avgLatency)
+                        dbgprint("Neighbors Latency List : "+str(NeighborsLatencyList))
+                        max_latency = max(NeighborsLatencyList)
+
+                        for key in NeighborsLatencyDict:
+                            for x in range(len(NeighborsLatencyDict[key])):
+                                if max_latency == NeighborsLatencyDict[key][x]:
+                                    id_maxlatency = key
+                                    print("key  =  ", key)
+                        
+                    dbgprint("Maximum communication latency : "+str(max_latency)+" for ID "+str(id_maxlatency))
+                    
+                    mgen = LatencyReportNode(self, self.idval, self.IP, self.Port, id_maxlatency, max_latency )
+                    dbgprint("Sending Latency Report To Exp at: "+str(self.Exp_IP)+":"+str(self.Exp_Port))
+                    expprint("Sending Latency Report To Exp at: "+str(self.Exp_IP)+":"+str(self.Exp_Port))
+                    self.msgmon.sendGen(mgen, self.Exp_IP, self.Exp_Port)   
+                        #n=0                        
+                    ##############################
+                    ###############
+                        
                 self.NodeManagerRun()
             else:
                 if(not (self.unpause_datetime is None)):

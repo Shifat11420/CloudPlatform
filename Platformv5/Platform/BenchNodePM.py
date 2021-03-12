@@ -7,6 +7,7 @@ from DistMethods.CalcGradDescent import CalcSubLevel
 from DistMethods.VectorContainer import VectorContainer
 from CommandMessageGenerators.QueueLenMessageGenerator import QueueLenMessageGenerator
 from CommandMessageGenerators.BenchMessageGenerator import BenchMessageGenerator
+from CommandMessageGenerators.BenchReportGenerator import BenchReportNode
 from CommandMessageGenerators.ContainerMessageGenerator import ContainerMessageGenerator
 from CommandMessageGenerators.ComboMsgGen import ComboGen
 from CommandMessageGenerators.AskForWork import AskForWork
@@ -14,6 +15,10 @@ import datetime
 from twisted.python.compat import xrange                                ##added import
 
 DEFAULT_CONN_TIME = 100
+NeighborsBenchDict = {}
+NeighborsBenchList = []
+
+
 
 class BenchNodePM(NodePlatformManager):
     def __init__(self, in_my_IP, in_my_Port, exp_ip, exp_port, ManagerOn=False):
@@ -29,6 +34,7 @@ class BenchNodePM(NodePlatformManager):
         self.lastnowork = datetime.datetime.now()
         self.VContainer = VectorContainer()
         self.expectCompTime = None
+
 
     def SendWorkRequest(self):
         with self.neighborInfoLock:
@@ -113,11 +119,11 @@ class BenchNodePM(NodePlatformManager):
             with self.neighborInfoLock:
                 for nid in self.neighborInfos:
                     vals = self.neighborInfos[nid]
-                
+                                   
                     mgen = BenchMessageGenerator(self)
                     dbgprint("Sending Bench/QL to "+str(vals[0])+":"+str(vals[1]))
                     self.msgmon.sendGen(mgen, vals[0], vals[1])
-                    
+
                     mgen = QueueLenMessageGenerator(self)
                     self.msgmon.sendGen(mgen, vals[0], vals[1])
 
@@ -127,6 +133,41 @@ class BenchNodePM(NodePlatformManager):
 
                     self.TestConnection(nid)
                 self.redistributeWork()
+        ####################
+                for nid in self.neighborBench:
+                    myneighbrBench = float(self.neighborBench[nid])                                      
+                    dbgprint("Bench of neighbor : ID : "+str(nid)+" is "+str(myneighbrBench))
+
+                    if nid in NeighborsBenchDict:
+                        NeighborsBenchDict[nid].append(myneighbrBench)
+                    else:
+                        NeighborsBenchDict.update({nid:[myneighbrBench]})   
+                    #dbgprint("Neighbors Bench Dict  : "+str(NeighborsBenchDict))
+                            
+                    NeighborsBenchList.append(myneighbrBench)
+                    #dbgprint("Neighbors Bench List : "+str(NeighborsBenchList))
+                    max_Bench = max(NeighborsBenchList)
+
+                    for key in NeighborsBenchDict:
+                        for x in range(len(NeighborsBenchDict[key])):
+                            if max_Bench == NeighborsBenchDict[key][x]:
+                                id_maxBench = key
+                                #print("key  =  ", key)
+                       
+                    dbgprint("Maximum Bench : "+str(max_Bench)+" for ID "+str(id_maxBench))
+                if not NeighborsBenchDict == {}:  
+                    dbgprint("Final Neighbors Bench List : "+str(NeighborsBenchList))    
+                    dbgprint("Final Neighbors Bench Dict  : "+str(NeighborsBenchDict))    
+                    dbgprint("Final Maximum Bench : "+str(max_Bench)+" for ID "+str(id_maxBench))   
+                    dbgprint("Maximum bench i.e. lowest performing node, ID : "+str(id_maxBench)+ " IP address : "+str(self.neighborInfos[id_maxBench][0])+" Port : "+ str(self.neighborInfos[id_maxBench][1]))                                            
+                    mgen = BenchReportNode(self, self.idval, self.IP, self.Port, id_maxBench, max_Bench )
+                    dbgprint("Sending maximum bench Report To Exp at: "+str(self.Exp_IP)+":"+str(self.Exp_Port))
+                    expprint("Sending maximum bench Report To Exp at: "+str(self.Exp_IP)+":"+str(self.Exp_Port))
+                    self.msgmon.sendGen(mgen, self.Exp_IP, self.Exp_Port)   
+
+                NeighborsBenchDict.clear() 
+                NeighborsBenchList.clear()                        
+        ####################            
 
     def RespondToNewWork(self):
         NodePlatformManager.RespondToNewWork(self)

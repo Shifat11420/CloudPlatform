@@ -24,6 +24,28 @@ RUN DEBIAN_FRONTEND="noninteractive" apt-get -y install tzdata
 ENV TZ=America/Chicago
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
+WORKDIR /app
+ADD . /app
+RUN set -xe \
+    && apt-get update \
+    && apt-get install python3-pip -y
+RUN pip install --upgrade pip
+RUN pip install tcp-latency
+
+# RUN apt-get update && \
+#       apt-get -y install sudo
+
+# RUN useradd -m docker && echo "docker:docker" | chpasswd && adduser docker sudo
+
+# USER docker
+
+# RUN if type sudo 2>/dev/null; then \ 
+#      echo "The sudo command already exists... Skipping."; \
+#     else \
+#      echo "#!/bin/sh\n\${@}" > /usr/sbin/sudo; \
+#      chmod +x /usr/sbin/sudo; \
+#     fi
+
 ADD Platform Platform
 ADD JSONFiles JSONFiles
 ADD Sandbox Sandbox

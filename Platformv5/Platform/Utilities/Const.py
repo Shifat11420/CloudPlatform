@@ -85,7 +85,7 @@ COMMAND_CONTAINERRESPONSE = "ContainerResponse"
 
 COMMAND_RECEIVEEXPNODE = "ReceiveExpNode"
 COMMAND_LATENCYREPORTNODE = "LatencyReportNode"               ##
-
+COMMAND_BENCHREPORTNODE = "BenchReportNode"               ##
 
 
 COMMAND_GETBENCH = "GetBench"
@@ -129,6 +129,10 @@ SLOWEST_ID = "Slowest_ID"             ##
 #SLOWEST_IP = "Slowest_IP"             ##
 #SLOWEST_PORT = "Slowest_Port"         ##
 MAX_LATENCY = "Maximum Latency"       ##
+
+LOWESTPERFORMINGNODE = "LowestPerformingNode"                           ##
+LOWESTPERFORMING_ID = "LowestPerforming_ID"             ##
+MAX_BENCH = "Maximum Bench"       ##
 
 IMAGE = "Image"
 COMMAND = "Command"
