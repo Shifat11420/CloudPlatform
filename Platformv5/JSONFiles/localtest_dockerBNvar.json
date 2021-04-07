@@ -3,7 +3,7 @@
     "prob_connected":"0.2",
     "exp_time":"600",
     "container_count":"23",
-    "vec_flows":[["-1.0","0.0"],["0.0","0.0"]],
+    "vec_flows":[["-1.0","-0.3"],["-0.7","-0.5"]],
     "vec_stases":[["0.0","0.0"],["0.0","0.0"]],
     "swapTimes":["400"],
     "graphseed":"1626",

@@ -23,7 +23,7 @@ class outgoer():
         reactor.connectTCP(self.ip, self.port, self.fact)
 
 class PlatformManager():
-    def __init__(self, in_my_IP, in_my_Port):
+    def __init__(self, in_my_IP, in_my_Port, location):
         self.IP = in_my_IP
         self.Port = in_my_Port
         self.reactorFileConfirmers = []
@@ -31,6 +31,7 @@ class PlatformManager():
         self.idval = str(uuid.uuid4())
         setFileName(self.idval)
         self.templogfilenames = []
+        self.location = location
 
     def ManagerThreadRun(self):
         dbgprint("bad way")

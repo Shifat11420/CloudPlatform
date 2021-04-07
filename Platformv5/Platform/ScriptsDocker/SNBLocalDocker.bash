@@ -17,4 +17,4 @@
 
 # bash Platform/ScriptsDocker/StartNBenchPM.bash 5 127.0.0.1 15000 11000 lo True 127.0
 
-docker run -it --net="host" --privileged bpete16/distplatform:4.60 bash -c "Platform/ScriptsDocker/StartNBenchPM.bash 5 127.0.0.1 15000 11000 lo True 127.0; while true; do sleep 10; done”
+docker run -it --net="host" --privileged bpete16/distplatform:4.60 bash -c "Platform/ScriptsDocker/StartNBenchPM.bash 5 127.0.0.1 15000 30000 lo True 127.0; while true; do sleep 10; done"

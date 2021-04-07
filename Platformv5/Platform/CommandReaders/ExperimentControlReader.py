@@ -23,6 +23,7 @@ class ReceiveExpNodeReader(TCPReader):
         exp_id = None
         exp_ip = None
         exp_port = 0
+        exp_loc = 0
         for val in vals:
             if(val.decode('utf-8') == STR_IP):
                 exp_ip = vals[i+1].decode('utf-8')
@@ -30,6 +31,8 @@ class ReceiveExpNodeReader(TCPReader):
                 exp_port = int(vals[i+1].decode('utf-8'))
             if(val.decode('utf-8') == STR_ID):
                 exp_id = vals[i+1].decode('utf-8')
+            if(val.decode('utf-8') == STR_LOC):
+                exp_loc = int(vals[i+1].decode('utf-8'))    
             i = i + 1
-        self.context.AddExpNode(exp_id, exp_ip, exp_port)
+        self.context.AddExpNode(exp_id, exp_ip, exp_port, exp_loc)
 

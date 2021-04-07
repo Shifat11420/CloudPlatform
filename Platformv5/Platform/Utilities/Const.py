@@ -37,6 +37,7 @@ LOCINDEX = "LocIndex"
 
 REFTASKID = "RefTaskID"
 DICT_DEBUG = "Debug"
+DICT_LOC = "Location"    ##
 DICT_SOURCE_IP = "Source_IP"
 DICT_SOURCE_PORT = "Source_Port"
 DICT_EXP_IP = "Exp_IP"
@@ -110,6 +111,8 @@ COMMAND_TG_HEADER = "TG_Header"
 COMMAND_RECEIVETASKOBLIG = "ReceiveTaskOblig"
 COMMAND_RECEIVETGJOB = "ReceiveTGJob"
 COMMAND_TASKLINK = "TaskLink"
+COMMAND_ASKTOSLEEP = "AskToSleep"               ##
+COMMAND_ASKTOSLEEPEXP = "AskToSleepExp"              ##
 
 TAG = "Tag"
 TASKGRAPHID = "TaskGraphID"
@@ -123,6 +126,7 @@ IPLOCATION = "localhost"
 STR_IP = "IP"
 STR_PORT = "PORT"
 STR_ID = "ID"
+STR_LOC = "LOCATION"
 
 SLOWESTNODE = "SlowestNode"                           ##
 SLOWEST_ID = "Slowest_ID"             ##
@@ -133,6 +137,7 @@ MAX_LATENCY = "Maximum Latency"       ##
 LOWESTPERFORMINGNODE = "LowestPerformingNode"                           ##
 LOWESTPERFORMING_ID = "LowestPerforming_ID"             ##
 MAX_BENCH = "Maximum Bench"       ##
+
 
 IMAGE = "Image"
 COMMAND = "Command"

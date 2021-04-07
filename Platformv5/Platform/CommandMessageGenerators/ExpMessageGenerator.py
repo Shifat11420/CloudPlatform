@@ -3,7 +3,7 @@ from CommandMessageGenerators.MessageGenerator import StringMessageGenerator
 import os
 
 class ReceiveExpNode(StringMessageGenerator):
-    def __init__(self, in_context, src_id, src_ip, src_port):
+    def __init__(self, in_context, src_id, src_ip, src_port, src_loc):
         strmsg = COMMAND_RECEIVEEXPNODE
         strmsg = strmsg + COMMA 
         strmsg = strmsg + STR_ID
@@ -17,4 +17,8 @@ class ReceiveExpNode(StringMessageGenerator):
         strmsg = strmsg + STR_PORT
         strmsg = strmsg + COMMA 
         strmsg = strmsg + str(src_port)
+        strmsg = strmsg + COMMA
+        strmsg = strmsg + STR_LOC
+        strmsg = strmsg + COMMA 
+        strmsg = strmsg + str(src_loc)
         StringMessageGenerator.__init__(self, strmsg, in_context)

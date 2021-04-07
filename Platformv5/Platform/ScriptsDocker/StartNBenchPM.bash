@@ -34,14 +34,15 @@ function startone {
    # usage: startone ip port eip eport debug
    echo "Server at "$1":"$2
    echo "Exp at "$3":"$4
+   echo "location at "$6
    echo "python Platform/BenchNodePM.py Source_IP=$1 Source_Port=$2 \\"
-   echo "       Exp_IP=$3 Exp_Port=$4 Debug=$5 &> output$2.txt &"
+   echo "       Exp_IP=$3 Exp_Port=$4 Debug=$5 Location=$6 &> output$2.txt &"
    #echo $PATH
    #ls -l /usr/bin/python*
    #whereis python3
-   python3 Platform/BenchNodePM.py "Source_IP=$1" "Source_Port=$2" "Exp_IP=$3" "Exp_Port=$4" "Debug=$5" &> output$2full.txt &
+   python Platform/BenchNodePM.py "Source_IP=$1" "Source_Port=$2" "Exp_IP=$3" "Exp_Port=$4" "Debug=$5" "Location=$6" &> output$2.txt &
    #echo $?
-   ps aux | grep python
+   #ps aux | grep python
 }
 
 # Find IP address
@@ -57,12 +58,13 @@ eip=$2
 eport=$3
 port=$4
 debug=$6
+loc=$8
 
 echo "total nodes= $n"
 for i in `seq 2 $n`; do
    echo "port : $port"
-   startone $myip $port $eip $eport $debug
+   startone $myip $port $eip $eport $debug $loc
    ((port++))
    echo "port again: $port"
 done
-startone $myip $port $eip $eport $debug
+startone $myip $port $eip $eport $debug $loc

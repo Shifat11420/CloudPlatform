@@ -6,11 +6,11 @@ import time
 from GrabAllLogs import PullAllMchnFiles
 
 remotedir = "/home/shifat"
-remotenet = "enp24s0f1"
+remotenet = "eno1"   #"eth0"
 
 distplatform = "bpete16/distplatform"
 platformdir = "Platformv5"
-platfile = "plat.tar"
+platfile = "plat50conn.tar"
 
 debug = "False"
 #bashfile = "StartNTGPM.bash"
@@ -56,14 +56,14 @@ def loadDocker(host, port, dockerfile):
     sshcommand(host, port, cmd)
     time.sleep(120)
 
-def runC(host, port, ipc, portc, version, numnodes, expfile, outfile, dockerfile, expindex, cpuset):
+def runC(host, port, ipc, portc, version, numnodes, expfile, outfile, dockerfile, expindex, cpuset, location):
     cscmd = ""
     if not cpuset == "x":
         cscmd = '--cpuset-cpus="'+cpuset+'"'
 
     loadDocker(host, port, dockerfile)
     time.sleep(30)
-    cmd = 'docker run '+cscmd+' --net="host" --privileged '+distplatform+':'+str(version)+' python3 Platform/ExpPlatformManager.py "SourceIP=' + str(ipc) + '" "Source_Port=' + str(portc) + '" "Exp_File='+str(expfile)+ '" "Debug=True" "Exp_Index=' + str(expindex) +'" &> ' + outfile + ' &'
+    cmd = 'docker run '+cscmd+' --net="host" --privileged '+distplatform+':'+str(version)+' python Platform/ExpPlatformManager.py "SourceIP=' + str(ipc) + '" "Source_Port=' + str(portc) + '" "Exp_File='+str(expfile)+ '" "Debug=True" "Exp_Index=' + str(expindex) +'" "Location=' + str(location) +'"  &> ' + outfile + ' &'
 
     sshcommand(host, port, cmd)
     print("COMMANDCTRL:"+cmd)
@@ -80,11 +80,11 @@ def runC(host, port, ipc, portc, version, numnodes, expfile, outfile, dockerfile
 #    cmd = "docker exec distplat python Platform/ScriptsDocker/DropLog.py"
 #    sshcommand(host, port, cmd)
 
-def runNodes(host, port, version, numnodes, ipc, portc, startport, dockerfile, ipprefix, cpuset, contname, outfname):
+def runNodes(host, port, version, numnodes, ipc, portc, startport, dockerfile, ipprefix, cpuset, location, contname, outfname):
     cscmd = ""
     if not cpuset == "x":
         cscmd = '--cpuset-cpus="'+cpuset+'"'
-    cmd = 'docker run -t -d '+cscmd+' --net="host" --name="'+contname+'" --privileged '+distplatform+':'+str(version)+' bash -c "Platform/ScriptsDocker/' +bashfile + ' ' + str(numnodes) + ' ' + str(ipc) + ' ' + str(portc) + ' ' + str(startport) + ' ' + remotenet + ' '+debug+' ' + ipprefix + '&>'+outfname+' ; while true; do sleep 10; done" &'
+    cmd = 'docker run -t -d '+cscmd+' --net="host" --name="'+contname+'" --privileged '+distplatform+':'+str(version)+' bash -c "Platform/ScriptsDocker/' +bashfile + ' ' + str(numnodes) + ' ' + str(ipc) + ' ' + str(portc) + ' ' + str(startport) + ' ' + remotenet + ' '+debug+' ' + ipprefix +' ' + location + '&>'+outfname+' ; while true; do sleep 10; done" &'
 
     sshcommand(host, port, cmd)
     print("COMMANDNODES:"+cmd)
@@ -183,8 +183,11 @@ def runExperiment(in_expfile, in_mchnfile, outfilename, expindex):
     ipc = getIP(mchn[0][0], mchn[0][1], ipprefix)
     ipc = ipc.decode('utf8')
     portc = 8007
-
-    runC(mchn[0][0], mchn[0][1], ipc, portc, version, onumnodes, expfilename, outfilename, platfile, expindex, mchn[0][3])
+    if len(mchn[0])>5:
+        location = mchn[0][4]
+    else:
+        location = None
+    runC(mchn[0][0], mchn[0][1], ipc, portc, version, onumnodes, expfilename, outfilename, platfile, expindex, mchn[0][3], location)
 
     time.sleep(5)
 
@@ -216,7 +219,11 @@ def runExperiment(in_expfile, in_mchnfile, outfilename, expindex):
     platnames = [""]
     outfnames = [""]
     for i in range(1, len(mchn)):
-        runNodes(mchn[i][0], mchn[i][1], version, mchn[i][2], ipc, portc, startports, platfile, ipprefix, mchn[i][3], "distplat"+str(platint), "outclient"+str(platint)+".txt")
+        if len(mchn[i])>5:
+            location = mchn[i][4]
+        else:
+            location = None
+        runNodes(mchn[i][0], mchn[i][1], version, mchn[i][2], ipc, portc, startports, platfile, ipprefix, mchn[i][3], location, "distplat"+str(platint), "outclient"+str(platint)+".txt")
         platnames.append("distplat"+str(platint))
         outfnames.append("outclient"+str(platint)+".txt")
         platint = platint + 1
@@ -248,14 +255,14 @@ else:
         ofname = "outputexp800c"+str(x)+".txt"
         basemchn = runExperiment(sys.argv[2], sys.argv[1], ofname, x)
         print("AfterExp")
-        time.sleep(900)
+        time.sleep(60*25)                                ##timeout? incresed from 900
         print("AfterSleep")
         scpcommand(basemchn[0], basemchn[1], remotedir, ofname, basemchn[4])
         subfolder = basemchn[4] + "extra"+str(x)+"/"
         print("BeforePull")
         #dropAllLogs(sys.argv[1])
         PullAllMchnFiles(sys.argv[1], subfolder, basemchn[3], basemchn[2], basemchn[5])
-        #REMEMBER TO TAKE NEX TTHING OUT!!
+        #REMEMBER TO TAKE NEXT TTHING OUT!!
         #break
         print("AfterPull")
         time.sleep(60*2)

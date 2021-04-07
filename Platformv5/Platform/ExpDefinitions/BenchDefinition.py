@@ -39,7 +39,8 @@ class BenchDefinition():
                     neigh_id = nids[neigh]
                     neigh_ip = expnodes[neigh_id].ip
                     neigh_port = expnodes[neigh_id].port
-                    mgen = AddNeighborMessageGenerator(context, neigh_ip, neigh_port, neigh_id)
+                    neigh_loc = expnodes[neigh_id].location
+                    mgen = AddNeighborMessageGenerator(context, neigh_ip, neigh_port, neigh_loc, neigh_id)
                     mgens.append(mgen)
                 mgen = SendExpectCompTime(context, self.expectedTime)
                 mgens.append(mgen)

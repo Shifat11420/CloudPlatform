@@ -5,6 +5,7 @@ def setDefaults(odict):
     odict[DICT_SOURCE_IP] = "localhost"
     odict[DICT_SOURCE_PORT] = 8007
     odict[DICT_FOLDER] = "Sandbox/"
+    #odict[DICT_LOC] = None
 
 class FIP():
     def __init__(self, filepath):

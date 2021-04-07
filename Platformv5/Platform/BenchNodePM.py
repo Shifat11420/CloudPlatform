@@ -8,21 +8,24 @@ from DistMethods.VectorContainer import VectorContainer
 from CommandMessageGenerators.QueueLenMessageGenerator import QueueLenMessageGenerator
 from CommandMessageGenerators.BenchMessageGenerator import BenchMessageGenerator
 from CommandMessageGenerators.BenchReportGenerator import BenchReportNode
+from CommandMessageGenerators.LowperfMessageGenerator import LowperfNode
 from CommandMessageGenerators.ContainerMessageGenerator import ContainerMessageGenerator
 from CommandMessageGenerators.ComboMsgGen import ComboGen
 from CommandMessageGenerators.AskForWork import AskForWork
 import datetime
+import time
 from twisted.python.compat import xrange                                ##added import
 
 DEFAULT_CONN_TIME = 100
 NeighborsBenchDict = {}
 NeighborsBenchList = []
+n=1
 
 
 
 class BenchNodePM(NodePlatformManager):
-    def __init__(self, in_my_IP, in_my_Port, exp_ip, exp_port, ManagerOn=False):
-        NodePlatformManager.__init__(self, in_my_IP, in_my_Port, exp_ip, exp_port, ManagerOn)
+    def __init__(self, in_my_IP, in_my_Port, exp_ip, exp_port, location, ManagerOn=False):
+        NodePlatformManager.__init__(self, in_my_IP, in_my_Port, exp_ip, exp_port, location, ManagerOn)
 
         self.neighborQueueLen = {}
         self.neighborSubQueueLen = {}
@@ -34,6 +37,7 @@ class BenchNodePM(NodePlatformManager):
         self.lastnowork = datetime.datetime.now()
         self.VContainer = VectorContainer()
         self.expectCompTime = None
+        
 
 
     def SendWorkRequest(self):
@@ -106,6 +110,45 @@ class BenchNodePM(NodePlatformManager):
 
     def GetOtherMGensForNeighbors(self):
         return []
+
+    def LowperfNode(self, node_id, node_ip, node_port, id_maxBench, max_Bench):  
+        dbgprint("Current node ID : "+str(id_maxBench)+" is the lowest performing neighbor from IP : "+str(node_ip)+" and port : "+str(node_port)+" with BENCH = "+str(max_Bench) )  
+        dbgprint("node_ip : "+str(node_ip)+" node_port : "+str(node_port))
+        dbgprint("self_ip : "+str(source_ip)+" self_port : "+str(port))
+
+
+        # ####   for 3rd experiment   #####
+        # global n
+        # dbgprint("Current node ID : "+str(id_maxBench)+" is the lowest performing neighbor from IP : "+str(node_ip)+" and port : "+str(node_port)+" with BENCH = "+str(max_Bench) )  
+        # dbgprint("node_ip : "+str(node_ip)+" node_port : "+str(node_port))
+        # dbgprint("self_ip : "+str(source_ip)+" self_port : "+str(port))
+        # if not source_ip == node_ip:
+        #     if n>5:
+        #         pass
+        #     else:    
+        #         dbgprint("count : "+str(n)) 
+        #         dbgprint("Connection on different physical machines, apply delay 2 sec on ip: "+str(source_ip)+" port: "+str(port))
+        #         time.sleep(2)
+        #         dbgprint("delay 2 sec applied")
+        #         n=n+1   
+        
+
+
+
+        # ####   for 2nd experiment   #####
+        # dbgprint("Current node ID : "+str(id_maxBench)+" is the lowest performing neighbor from IP : "+str(node_ip)+" and port : "+str(node_port)+" with BENCH = "+str(max_Bench) )  
+        # dbgprint("node_ip : "+str(node_ip)+" node_port : "+str(node_port))
+        # dbgprint("self_ip : "+str(source_ip)+" self_port : "+str(port))
+        # dbgprint("Connection on different physical machines, apply delay 2 sec on ip: "+str(source_ip)+" port: "+str(port))
+        # time.sleep(2)
+        # dbgprint("delay 2 sec applied")
+
+
+
+        ####   for 1st experiment   #####       
+        #dbgprint("Current node ID : "+str(id_maxBench)+" is the lowest performing neighbor from IP : "+str(node_ip)+" and port : "+str(node_port)+" with BENCH = "+str(max_Bench) ) 
+        #time.sleep(2)
+        #dbgprint("after sleep on lowest perfrming nodes")
                     
     def NodeManagerRun(self):
         dbgprint("BM_NodeManagerRun")
@@ -119,7 +162,7 @@ class BenchNodePM(NodePlatformManager):
             with self.neighborInfoLock:
                 for nid in self.neighborInfos:
                     vals = self.neighborInfos[nid]
-                                   
+                    
                     mgen = BenchMessageGenerator(self)
                     dbgprint("Sending Bench/QL to "+str(vals[0])+":"+str(vals[1]))
                     self.msgmon.sendGen(mgen, vals[0], vals[1])
@@ -142,7 +185,7 @@ class BenchNodePM(NodePlatformManager):
                         NeighborsBenchDict[nid].append(myneighbrBench)
                     else:
                         NeighborsBenchDict.update({nid:[myneighbrBench]})   
-                    #dbgprint("Neighbors Bench Dict  : "+str(NeighborsBenchDict))
+                    #dbgprint("Neighbors BenAsktosleepExp(self):ch Dict  : "+str(NeighborsBenchDict))
                             
                     NeighborsBenchList.append(myneighbrBench)
                     #dbgprint("Neighbors Bench List : "+str(NeighborsBenchList))
@@ -155,11 +198,41 @@ class BenchNodePM(NodePlatformManager):
                                 #print("key  =  ", key)
                        
                     dbgprint("Maximum Bench : "+str(max_Bench)+" for ID "+str(id_maxBench))
+                    
                 if not NeighborsBenchDict == {}:  
                     dbgprint("Final Neighbors Bench List : "+str(NeighborsBenchList))    
                     dbgprint("Final Neighbors Bench Dict  : "+str(NeighborsBenchDict))    
-                    dbgprint("Final Maximum Bench : "+str(max_Bench)+" for ID "+str(id_maxBench))   
-                    dbgprint("Maximum bench i.e. lowest performing node, ID : "+str(id_maxBench)+ " IP address : "+str(self.neighborInfos[id_maxBench][0])+" Port : "+ str(self.neighborInfos[id_maxBench][1]))                                            
+                    dbgprint("Final Maximum Bench : "+str(max_Bench)+" for ID "+str(id_maxBench)) 
+                    try:
+                        max_bench_IP =  self.neighborInfos[id_maxBench][0]
+                        max_bench_PORT =  self.neighborInfos[id_maxBench][1]
+                        dbgprint("Maximum bench i.e. lowest performing node, ID : "+str(id_maxBench)+ " IP address : "+str(max_bench_IP)+" Port : "+ str(max_bench_PORT))          
+                    except KeyError:
+                        print("neighbor is droped")    
+                                                      
+                    if len(self.neighborInfos)>40:                            
+                        for nid in self.neighborInfos:
+                            vals = self.neighborInfos[nid]
+                            if nid == id_maxBench:
+                                # del self.neighborInfos[nid]
+                                # dbgprint("deleted neighbor id: "+str(nid)+"Port : "+str(vals[1]))
+                                break
+
+
+                    # if (self.neighborInfos[id_maxBench][1]== 16000 or self.neighborInfos[id_maxBench][1]== 16001 or self.neighborInfos[id_maxBench][1]== 16002 or self.neighborInfos[id_maxBench][1]== 16003 or self.neighborInfos[id_maxBench][1]== 16004):
+                    #     time.sleep(5)
+                    #     dbgprint("after delay on port :"+str(self.neighborInfos[id_maxBench][1]))
+                    #time.sleep(5)
+                    #dbgprint("after delay on port :"+str(self.neighborInfos[id_maxBench][1]))
+                    
+                    #if self.neighborInfos[id_maxBench][1]==vals[]
+
+
+                ############Sending to lowest performing node ##############
+                    # mgen = LowperfNode(self, self.idval, self.IP, self.Port, id_maxBench, max_Bench )
+                    # dbgprint("Sending to lowest performing node "+str(self.neighborInfos[id_maxBench][0])+":"+str(self.neighborInfos[id_maxBench][1]))
+                    # self.msgmon.sendGen(mgen, self.neighborInfos[id_maxBench][0] , self.neighborInfos[id_maxBench][1])
+
                     mgen = BenchReportNode(self, self.idval, self.IP, self.Port, id_maxBench, max_Bench )
                     dbgprint("Sending maximum bench Report To Exp at: "+str(self.Exp_IP)+":"+str(self.Exp_Port))
                     expprint("Sending maximum bench Report To Exp at: "+str(self.Exp_IP)+":"+str(self.Exp_Port))
@@ -167,8 +240,22 @@ class BenchNodePM(NodePlatformManager):
 
                 NeighborsBenchDict.clear() 
                 NeighborsBenchList.clear()                        
-        ####################            
+        ####################       
+        # 
+    def AsktosleepExp(self, exp_id, exp_ip, exp_port):
+        global n
+        dbgprint("This node, ip :"+str(source_ip)+" port : "+str(port)+" is the lowest performer")   
+        # if n>5:
+        #     pass
+        # else:    
+        #     dbgprint("count : "+str(n)) 
+        #     dbgprint("I am lowest performer, my ip: "+str(source_ip)+" port: "+str(port))
+        #     #time.sleep(2)
+        #     #dbgprint("delay 2 sec applied")
+        #     n=n+1
 
+
+            
     def RespondToNewWork(self):
         NodePlatformManager.RespondToNewWork(self)
         if(self.GetQueueLen() > 2):
@@ -212,7 +299,11 @@ class BenchNodePM(NodePlatformManager):
             qltotal = qltotal + nql
             nqls.append(nql)
         
-            nconn = self.neighborConn[nid]
+            # try:
+            #     nconn = self.neighborConn[nid]
+            # except KeyError:
+            #     print("this neighbor is deleted")
+            nconn = self.neighborConn.get(nid, 0)
             conntotal = conntotal + nconn
             nconns.append(nconn)
 
@@ -241,14 +332,26 @@ class BenchNodePM(NodePlatformManager):
             if(nid != self.idval):
                 #mgens = []
                 dbgprint("RDWORK:REDIST!")
-                vals = self.neighborInfos[nid]
-                for i in xrange(0, dictResults[nid]):
-                    worktosend = self.GetWorkToSend()
-                    if not worktosend is None:
-                        mgen = ContainerMessageGenerator(worktosend, self)
-                        dbgprint("RDWORK:SENDING:"+str(worktosend.idstr))
-                        dbgprint("RDWORK:DEST:"+str(vals[0])+":"+str(vals[1]))
-                        self.msgmon.sendGen(mgen, vals[0], vals[1])
+                try:
+                    vals = self.neighborInfos[nid]
+                    for i in xrange(0, dictResults[nid]):
+                        worktosend = self.GetWorkToSend()
+                        if not worktosend is None:
+                            mgen = ContainerMessageGenerator(worktosend, self)
+                            dbgprint("RDWORK:SENDING:"+str(worktosend.idstr))
+                            dbgprint("RDWORK:DEST:"+str(vals[0])+":"+str(vals[1]))
+                            self.msgmon.sendGen(mgen, vals[0], vals[1])
+                    for i in xrange(0, dictResults[nid]):
+                        worktosend = self.GetWorkToSend()
+                        if not worktosend is None:
+                            mgen = ContainerMessageGenerator(worktosend, self)
+                            dbgprint("RDWORK:SENDING:"+str(worktosend.idstr))
+                            dbgprint("RDWORK:DEST:"+str(vals[0])+":"+str(vals[1]))
+                            self.msgmon.sendGen(mgen, vals[0], vals[1])        
+                except KeyError:
+                    print("No ID exist!")
+    
+                
                     #mgens.append(mgen)
                 #cmgen = ComboGen(self, mgens)
                 #vals = self.neighborInfos[nid]
@@ -266,11 +369,13 @@ if __name__ == "__main__":
     exp_port = argsFIP.get(DICT_EXP_PORT)
     print (argsFIP)                                    ##
     dbg = argsFIP.get(DICT_DEBUG)
+    location = argsFIP.get(DICT_LOC)               ####
+    print("location : ",location)                       ####
     if(dbg == "True"):
         setDbg(True)
     else:
         setDbg(False)
     print ("Debug is "+str(DEBUG))                        ##
 
-    pm = BenchNodePM(source_ip, port, exp_ip, exp_port)
+    pm = BenchNodePM(source_ip, port, exp_ip, exp_port, location)                   ####
     pm.StartAll()

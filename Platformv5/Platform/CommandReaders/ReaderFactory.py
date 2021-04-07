@@ -8,6 +8,8 @@ from CommandReaders.AskForWorkReader import AskForWorkReader
 from CommandReaders.ExperimentControlReader import ReceiveExpNodeReader
 from CommandReaders.LatencyReportReader import LatencyReportReader
 from CommandReaders.BenchReportReader import BenchReportReader
+from CommandReaders.LowperfReader import LowperfReader
+from CommandReaders.AsktosleepExpReader import AsktosleepExpReader
 from CommandReaders.BenchReader import SendBenchReader, ReceiveBenchReader
 from CommandReaders.QueueLenReader import SendQueueLenReader, ReceiveQueueLenReader, RecieveExpectCompTime
 from CommandReaders.SendLogsReader import SendLogsReader, ReceiveLogsReader
@@ -90,6 +92,11 @@ class ReaderFactory():
     	    return LatencyReportReader(self.context)                                      ##
         if(name.startswith(COMMAND_BENCHREPORTNODE.encode('utf-8'))):                     ##
     	    return BenchReportReader(self.context)                                        ##
+        if(name.startswith(COMMAND_ASKTOSLEEP.encode('utf-8'))):                     ##
+    	    return LowperfReader(self.context)    
+        if(name.startswith(COMMAND_ASKTOSLEEPEXP.encode('utf-8'))):                     ##
+    	    return AsktosleepExpReader(self.context)     
+     
 
         
         if(name.startswith(COMMAND_DYNTASKOBLIG.encode('utf-8'))):

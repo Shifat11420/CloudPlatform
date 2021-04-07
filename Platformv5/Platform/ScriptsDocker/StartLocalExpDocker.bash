@@ -18,10 +18,9 @@ function startone {
     echo "       python3 Platform/ExpPlatformManager.py \\"
     echo "              Source_IP=$1 Source_Port=$2 \\"
     echo "              Exp_File=$3 Debug=True Exp_Index=0"
-    docker run --net="host" --privileged bpete16/distplatform:4.60 \
-	   python Platform/ExpPlatformManager.py "Source_IP=$1" "Source_Port=$2" "Exp_File=$3" "Debug=True" "Exp_Index=0" &> outputExp.txt
-    echo $?
-    ps aux | grep python
+    docker run --net="host" --privileged bpete16/distplatform:4.60 python Platform/ExpPlatformManager.py "Source_IP=$1" "Source_Port=$2" "Exp_File=$3" "Debug=True" "Exp_Index=0" &> explocal.txt
+    #echo $?
+    #ps aux | grep python
 }
 
 # Find IP address

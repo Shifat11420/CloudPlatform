@@ -5,6 +5,7 @@ from MessageManagers.SendMessage import MessageSenderFactory
 from CommandMessageGenerators.MessageGenerator import StringMessageGenerator
 from CommandMessageGenerators.MessageRepeat import MsgMonitor
 from CommandMessageGenerators.ExpMessageGenerator import ReceiveExpNode
+from CommandMessageGenerators.AsktosleepExpMGen import AsktosleepExpNode
 from CommandMessageGenerators.LatencyReportGenerator import LatencyReportNode
 from CommandMessageGenerators.PauseUnpauseMessageGenerator import TimeUnpauseMessageGenerator
 from ExpDefinitions.ExpFactory import BuildExpDef
@@ -19,13 +20,16 @@ import sys
 import os              ##
 from PlatformManager import PlatformManager
 
-host = 'lo'
-delay = '100ms'
+# host = 'lo'
+# delay = '100ms'
+listofbenches = []
+portlist = []
+lowPerformersDict = {}
 
 
 class ExpPlatformManager(PlatformManager):
-    def __init__(self, in_my_IP, in_my_Port, in_expdef, ManagerOn=True):
-        PlatformManager.__init__(self, in_my_IP, in_my_Port)
+    def __init__(self, in_my_IP, in_my_Port, in_expdef, location, ManagerOn=True):
+        PlatformManager.__init__(self, in_my_IP, in_my_Port, location)
         self.managerOn = ManagerOn
         self.expnodes = {}
         self.expnodeslock = threading.Lock()
@@ -93,11 +97,11 @@ class ExpPlatformManager(PlatformManager):
             else:
                 self.ExpManagerRun()
 
-    def AddExpNode(self, newid, newip, newport):
+    def AddExpNode(self, newid, newip, newport, newlocation):
         #from Utilities.Const import *                   ##
         from Utilities.Location import Location
         with self.expnodeslock:
-            self.expnodes[newid] =Location(newip, newport)
+            self.expnodes[newid] =Location(newip, newport, newlocation)
         
 
 
@@ -108,7 +112,7 @@ class ExpPlatformManager(PlatformManager):
                 loc = self.expnodes[key]                    
                 if key == slowest_id:
                     listoflatencies.append(max_latency)
-                    dbgprint("Slowest communication link with node, ID : "+str(key)+" IP : "+str(loc.ip)+" Port : "+str(loc.port)) 
+                    dbgprint("From IP "+str(node_ip)+" and port "+str(node_port)+" Slowest communication link with node, ID : "+str(key)+" IP : "+str(loc.ip)+" Port : "+str(loc.port)+" with Latency = "+str(max_latency)) 
             dbgprint("List of latencies : "+str(listoflatencies))  
             listoflatencies = [x for x in listoflatencies]
             listoflatencies.sort(reverse=True)
@@ -118,21 +122,57 @@ class ExpPlatformManager(PlatformManager):
 
 
     def BenchReportExpNode(self, node_id, node_ip, node_port, id_maxBench, max_Bench):  
-        listofbenches = []
-        portlist = []
+
         #n=1
         with self.expnodeslock:
             for key in self.expnodes:
-                loc = self.expnodes[key]             
-                #dbgprint("Sending a command to remove slowest node:"+str(loc))                               
+                loc = self.expnodes[key]                                                 
                 if key == id_maxBench:
-                    # dbgprint("before while")
-                    # while n>0:  
-                        #dbgprint("after while")
-                    listofbenches.append(max_Bench)
-                    dbgprint("Lowest performing node, ID : "+str(key)+" IP : "+str(loc.ip)+" Port : "+str(loc.port)+" with BENCH = "+str(max_Bench) )
-                    portlist.append(loc.port)
-                    dbgprint("Port List before artificial delay : "+str(portlist)+" from port "+str(node_ip))
+                    dbgprint("From IP "+str(node_ip)+" and port "+str(node_port)+"Lowest performing node, ID : "+str(key)+" IP : "+str(loc.ip)+" Port : "+str(loc.port)+" with BENCH = "+str(max_Bench) )
+        #             listofbenches.append(max_Bench)
+        #             portlist.append(loc.port)
+
+        #             if loc in lowPerformersDict:
+        #                 lowPerformersDict[loc].append(max_Bench)
+        #             else:
+        #                 lowPerformersDict.update({loc:[max_Bench]})   
+        #             dbgprint("lowPerformersDict  : "+str(lowPerformersDict))
+
+
+        # dbgprint("len(expnodes) : "+str(len(self.expnodes)))
+        # if len(listofbenches)==len(self.expnodes): 
+        #     dbgprint("list of benches : "+str(listofbenches))
+        #     dbgprint("port list : "+str(portlist))        
+        #     lowest_performance = max(listofbenches)
+        #     dbgprint("Lowest performance : "+str(lowest_performance))
+        #     dbgprint("low Performers Dict  : "+str(lowPerformersDict))
+
+        #     for key in lowPerformersDict:
+        #         for x in range(len(lowPerformersDict[key])):
+        #             if lowest_performance == lowPerformersDict[key][x]:
+        #                 loc_lowest_performance = key
+        #                 print("loc_lowest_performance  =  ", loc_lowest_performance, "loc ip : ", loc_lowest_performance.ip, "loc port : ", loc_lowest_performance.port)
+
+        #                 if n==1:
+        #                     dbgprint("Sending Request To Sleep :"+str(loc_lowest_performance))
+        #                     self.msgmon.sendCommand(COMMAND_ASKTOSLEEPEXP, self, loc_lowest_performance.ip, loc_lowest_performance.port)
+        #                     n=n-1
+            
+        #     listofbenches.clear()
+        #     portlist.clear()
+        #     lowPerformersDict.clear()           
+                        
+                    #dbgprint("before while")
+                    #while n>0:
+                    # if loc.port == 30003: 
+                    #     dbgprint("after loc.port == 30003")
+                    #     listofbenches.append(max_Bench)
+                    #     #dbgprint("Lowest performing node, ID : "+str(key)+" IP : "+str(loc.ip)+" Port : "+str(loc.port)+" with BENCH = "+str(max_Bench) )
+                    #     portlist.append(loc.port)
+                    #     time.sleep(10)
+                    #     dbgprint("Portlist after delay : "+str(portlist)+" from port "+str(node_port))
+                    #     #n=0
+                    #dbgprint("Port List before artificial delay : "+str(portlist)+" from port "+str(node_ip))
                         # # for iport in range(len(portlist)):
                         # #     if not portlist[iport]==loc.port:
                         # #         portlist.append(loc.port)
@@ -166,9 +206,9 @@ class ExpPlatformManager(PlatformManager):
                 # dbgprint("locport : "+str(loc.port))
                 # if loc.port == 20003:
                 #     dbgprint("locport before slowing down : "+str(loc.port))
-                #     os.system('sudo tc qdisc add dev {0} root handle 1: prio priomap 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0'.format(host, loc.port, loc.port, delay))
-                #     os.system('sudo tc qdisc add dev {0} parent 1:2 handle 20: netem delay {3}'.format(host, loc.port, loc.port, delay))
-                #     os.system('sudo tc filter add dev {0} parent 1:0 protocol ip u32 match ip sport {1} 0xffff flowid 1:2'.format(host, loc.port, loc.port, delay))
+                #     os.system('/sbin/tc qdisc add dev {0} root handle 1: prio priomap 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0'.format(host, loc.port, loc.port, delay))
+                #     os.system('/sbin/tc qdisc add dev {0} parent 1:2 handle 20: netem delay {3}'.format(host, loc.port, loc.port, delay))
+                #     os.system('/sbin/tc filter add dev {0} parent 1:0 protocol ip u32 match ip sport {1} 0xffff flowid 1:2'.format(host, loc.port, loc.port, delay))
                 #     dbgprint("locport after slowing down : "+str(loc.port))
                 ############################
 
@@ -206,6 +246,8 @@ if __name__ == "__main__":
     expfilename = argsFIP.get(DICT_EXP_FILE)              ##
     dbg = argsFIP.get(DICT_DEBUG)                         ##
     expindex = argsFIP.get(DICT_EXP_INDEX)                ##
+    location = argsFIP.get(DICT_LOC)               ####
+    print("location : ",location) 
     print (argsFIP)
     if(dbg == "True"):
         setDbg(True)
@@ -216,7 +258,7 @@ if __name__ == "__main__":
     if(expdef is None):
         dbgprint("EXP Busted")
     else:
-        pm = ExpPlatformManager(source_ip, port, expdef)
+        pm = ExpPlatformManager(source_ip, port, expdef, location)
         pm.StartAll()
 
     
