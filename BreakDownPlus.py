@@ -141,7 +141,11 @@ def BreakLog(indir, outfilename, outputbad = False):
         for aFileName in lines.keys():
             print("OUTFILE:"+aFileName)
             fbvals = [float(x) for x in lines[aFileName]["X"][RBEN]]
-            bave = sum(fbvals) / float(len(fbvals))
+            if len(fbvals) == 0:
+                print("how many lengths are zero?")
+                pass
+            else:
+                bave = sum(fbvals) / float(len(fbvals))
             oFile.write(aFileName+",")
             oFile.write(":".join(lines[aFileName]["L"][SCONT])+",")
             oFile.write(str(lines[aFileName]["C"][RFILE])+",")
