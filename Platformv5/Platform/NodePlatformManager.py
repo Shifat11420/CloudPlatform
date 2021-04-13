@@ -22,18 +22,9 @@ from DockerManagers.NasManager import GetRValueFromNAS
 DEFAULTBENCHTIME = 400
 NeighborsLatencyDict = {}
 NeighborsLatencyList = []
-timeout = 10
-runs = 5
 avgLatencyList = []
 n = 1
-m=2
-
 LatencyList = []
-
-#host = 'lo'
-# sport = '30000'
-# dport = '30003'
-#delay = '10ms'
 
 
 
@@ -215,11 +206,11 @@ class NodePlatformManager(PlatformManager):
             if(self.terminate):
                 self.SafeStopServer()
                 break
-            if(self.managerOn):  
+            if(self.managerOn):
                 dbgprint("mgr_on")
 
                 ####################################### 
-                global n,m               
+                global n              
                 while (n>0):
                     dbgprint("mgr_on for latency test")
                 
@@ -296,193 +287,86 @@ class NodePlatformManager(PlatformManager):
                             if nid in NeighborsLatencyDict:
                                 NeighborsLatencyDict[nid].append(avgLatency)
                             else:
-                                NeighborsLatencyDict.update({nid:[avgLatency]})   
-                            #dbgprint("Neighbors Latency Dict  : "+str(NeighborsLatencyDict))
-                            
+                                NeighborsLatencyDict.update({nid:[avgLatency]})                           
                             NeighborsLatencyList.append(avgLatency)
-                            #dbgprint("Neighbors Latency List : "+str(NeighborsLatencyList))
-                            #max_latency = max(NeighborsLatencyList)
-
-                          
-                            # for key in NeighborsLatencyDict:
-                            #     for x in range(len(NeighborsLatencyDict[key])):
-                            #         if max_latency == NeighborsLatencyDict[key][x]:
-                            #             id_maxlatency = key
-                                        #print("key 1 =  ", key)
-                                    # if second_highest_latency == NeighborsLatencyDict[key][x]:
-                                    #     id_2ndmaxlatency = key
-                                    #     print("key 2 =  ", key)    
+                              
                         dbgprint("Neighbors Latency Dict  : "+str(NeighborsLatencyDict))
                         dbgprint("Neighbors Latency List : "+str(NeighborsLatencyList))
+                        #max_latency = max(NeighborsLatencyList)
                                                 
                         sorted_NeighborsLatencyList = sorted(NeighborsLatencyList)
+                        print("Sorted Neighbors Latency List : ", sorted_NeighborsLatencyList)
 
-                        max_latency = sorted_NeighborsLatencyList[-1]
-                        second_highest_latency = sorted_NeighborsLatencyList[-2]
-                        third_highest_latency = sorted_NeighborsLatencyList[-3]
-                        fourth_highest_latency = sorted_NeighborsLatencyList[-4]
-                        fifth_highest_latency = sorted_NeighborsLatencyList[-5]
-                        sixth_highest_latency = sorted_NeighborsLatencyList[-6]
-                        seventh_highest_latency = sorted_NeighborsLatencyList[-7]
-                        eighth_highest_latency = sorted_NeighborsLatencyList[-8]
-                        ninth_highest_latency = sorted_NeighborsLatencyList[-9]
-                        tenth_highest_latency = sorted_NeighborsLatencyList[-10]
-                        if len(self.neighborInfos)>25:
-                            eleventh_highest_latency = sorted_NeighborsLatencyList[-11]
-                            twelveth_highest_latency = sorted_NeighborsLatencyList[-12]
-                            thirteenth_highest_latency = sorted_NeighborsLatencyList[-13]
-                            fourteenth_highest_latency = sorted_NeighborsLatencyList[-14]
-                            fifteenth_highest_latency = sorted_NeighborsLatencyList[-15]
- 
- 
 
-                        dbgprint("highest_latency = "+str(max_latency)+" and second_highest_latency = "+str(second_highest_latency))
+                        d={}        #dict for latency
+                        c={}        #dict  for id  
+                        for i in range(1,len( self.neighborInfos)+1):
+                            #if len( self.neighborInfos)>=i:
+                            d["the{0}th_highest_latency".format(i)] = sorted_NeighborsLatencyList[-i]
+                            print(d)
+                            dbgprint("the"+str(i)+"th_highest_latency is "+str(d["the{0}th_highest_latency".format(i)]))
+                        #dbgprint("the"+str(len( self.neighborInfos))+"th_highest_latency is "+str(d["the{0}th_highest_latency".format(len( self.neighborInfos))]))        
+                                
+                            for nid in  self.neighborInfos:
+                                vals =  self.neighborInfos[nid]
+                                for key in NeighborsLatencyDict:
+                                    for x in range(len(NeighborsLatencyDict[key])):
+                                        if d["the{0}th_highest_latency".format(i)] == NeighborsLatencyDict[key][x]:
+                                            c["id_{0}thmaxlatency".format(i)] = key
+                        for i in range(1,len( self.neighborInfos)+1):  #range(len( self.neighborInfos)):   
+                            #if len( self.neighborInfos)>=i:                     
+                            dbgprint("the"+str(i)+"th id is "+str(c["id_{0}thmaxlatency".format(i)]))  #i+1 to i
 
-                        for nid in self.neighborInfos:
-                            vals = self.neighborInfos[nid]
-                            for key in NeighborsLatencyDict:
-                                for x in range(len(NeighborsLatencyDict[key])):
-                                    if max_latency == NeighborsLatencyDict[key][x]:
-                                        id_maxlatency = key
-                                    if second_highest_latency == NeighborsLatencyDict[key][x]:
-                                        id_2ndmaxlatency = key
-                                    if third_highest_latency == NeighborsLatencyDict[key][x]:
-                                        id_3rdmaxlatency = key
-                                    if fourth_highest_latency == NeighborsLatencyDict[key][x]:
-                                        id_4thmaxlatency = key
-                                    if fifth_highest_latency == NeighborsLatencyDict[key][x]:
-                                        id_5thmaxlatency = key   
-                                    if sixth_highest_latency == NeighborsLatencyDict[key][x]:
-                                        id_6thmaxlatency = key
-                                    if seventh_highest_latency == NeighborsLatencyDict[key][x]:
-                                        id_7thmaxlatency = key
-                                    if eighth_highest_latency == NeighborsLatencyDict[key][x]:
-                                        id_8thmaxlatency = key
-                                    if ninth_highest_latency == NeighborsLatencyDict[key][x]:
-                                        id_9thmaxlatency = key
-                                    if tenth_highest_latency == NeighborsLatencyDict[key][x]:
-                                        id_10thmaxlatency = key 
-                                    if len(self.neighborInfos)>25:      
-                                        if eleventh_highest_latency == NeighborsLatencyDict[key][x]:
-                                            id_11thmaxlatency = key
-                                        if twelveth_highest_latency == NeighborsLatencyDict[key][x]:
-                                            id_12thmaxlatency = key
-                                        if thirteenth_highest_latency == NeighborsLatencyDict[key][x]:
-                                            id_13thmaxlatency = key
-                                        if fourteenth_highest_latency == NeighborsLatencyDict[key][x]:
-                                            id_14thmaxlatency = key
-                                        if fifteenth_highest_latency == NeighborsLatencyDict[key][x]:
-                                            id_15thmaxlatency = key                
-                                         
-                        dbgprint("Maximum communication latency : "+str(max_latency)+" for ID "+str(id_maxlatency))                 
-                        print("key 1 =  ", id_maxlatency)            
-                        print("key 2 =  ", id_2ndmaxlatency)
-                        print("key 3 =  ", id_3rdmaxlatency)
-                        print("key 4 =  ", id_4thmaxlatency)
-                        print("key 5 =  ", id_5thmaxlatency)   
-                        print("key 6 =  ", id_6thmaxlatency)            
-                        print("key 7 =  ", id_7thmaxlatency)
-                        print("key 8 =  ", id_8thmaxlatency)
-                        print("key 9 =  ", id_9thmaxlatency)
-                        print("key 10 =  ", id_10thmaxlatency) 
-                        if len(self.neighborInfos)>25:      
-                            print("key 11 =  ", id_11thmaxlatency)            
-                            print("key 12 =  ", id_12thmaxlatency)
-                            print("key 13 =  ", id_13thmaxlatency)
-                            print("key 14 =  ", id_14thmaxlatency)
-                            print("key 15 =  ", id_15thmaxlatency)
+                        dbgprint("highest_latency = "+str(d["the{0}th_highest_latency".format(1)])+ " and "+str(len( self.neighborInfos))+ "th_highest_latency = "+str( d["the{0}th_highest_latency".format(len( self.neighborInfos))]))
+                        max_latency = d["the{0}th_highest_latency".format(1)]
+                        id_maxlatency = c["id_{0}thmaxlatency".format(i)]
+                       
+                        drop_nbr_size = 0                       
+                        # if len( self.neighborInfos)>13 and len( self.neighborInfos)<=18:
+                        #     drop_nbr_size = 2
+                        # if len( self.neighborInfos)>18 and len( self.neighborInfos)<=23:  
+                        #     drop_nbr_size = 4  
+                        # if len( self.neighborInfos)>23 and len( self.neighborInfos)<=28:
+                        #     drop_nbr_size = 6  
+                        # if len( self.neighborInfos)>28 and len( self.neighborInfos)<=33:
+                        #     drop_nbr_size = 9
+                        # if len( self.neighborInfos)>33 and len( self.neighborInfos)<=38:  
+                        #     drop_nbr_size = 15    #12  
+                        # if len( self.neighborInfos)>38 and len( self.neighborInfos)<=42:
+                        #     drop_nbr_size = 18   #15      
+                        # if len( self.neighborInfos)>42 and len( self.neighborInfos)<=45:
+                        #     drop_nbr_size = 18   
+                           
+                        # ########################   local test only   ######################################
+                        # if len( self.neighborInfos)>=5 and len( self.neighborInfos)<9:          
+                        #     drop_nbr_size = 2                                               
+                        # #################################################
                         
+                        # ########################   full graph test only   ######################################
+                        if len( self.neighborInfos)>35:
+                            drop_nbr_size = 11
+                         
+
+                        ###################################   DROP NEIGHBORS #####################
+                        print("DELETING slowest ",drop_nbr_size, " neighbors")
+                        for k in range(drop_nbr_size):
+                            try:
+                                dbgprint("deleting key "+str(k+1)+ " =  "+str( c["id_{0}thmaxlatency".format(k+1)])+" port : "+str(self.neighborInfos[c["id_{0}thmaxlatency".format(k+1)]][1]))           
+                                del  self.neighborInfos[c["id_{0}thmaxlatency".format(k+1)]]
+                            except KeyError:
+                                print("neighbor is already droped")     
+                        #######################################
+
+                         
+                        dbgprint("Maximum communication latency : "+str(max_latency)+" for ID "+str(id_maxlatency))                 
+                                           
                         mgen = LatencyReportNode(self, self.idval, self.IP, self.Port, id_maxlatency, max_latency )
                         dbgprint("Sending Latency Report To Exp at: "+str(self.Exp_IP)+":"+str(self.Exp_Port))
                         expprint("Sending Latency Report To Exp at: "+str(self.Exp_IP)+":"+str(self.Exp_Port))
                         self.msgmon.sendGen(mgen, self.Exp_IP, self.Exp_Port)   
-                        ############################
-                        # if len(self.neighborInfos)>10:                            
-                        #     for nid in self.neighborInfos:
-                        #         vals = self.neighborInfos[nid]
-                        #         if nid == id_maxlatency:
-                        #             del self.neighborInfos[nid]
-                        #             dbgprint("deleted 1st slow link neighbor id: "+str(nid)+"Port : "+str(vals[1]))
-                        #             break
-                        #         if nid == id_2ndmaxlatency:
-                        #             # del self.neighborInfos[nid]
-                        #             # dbgprint("deleted 2nd slow link neighbor id: "+str(nid)+"Port : "+str(vals[1]))
-                        #             break
-                                    # if abs(int(self.location) - int(vals[2]))> 80 and abs(int(self.location) - int(vals[2]))< 100: 
-                                    #     del self.neighborInfos[nid]
-                                    #     dbgprint("deleted neighbor id: "+str(nid)+"Port : "+str(vals[1]))
-                                    #     break
-                        ####################################
-                        if len(self.neighborInfos)>25:
-                            print("DELETING 15 neighbors")
-                            print("deleting key 1 =  ", id_maxlatency, " port : ", self.neighborInfos[id_maxlatency][1])            
-                            print("deleting key 2 =  ", id_2ndmaxlatency, " port : ", self.neighborInfos[id_2ndmaxlatency][1])
-                            print("deleting key 3 =  ", id_3rdmaxlatency, " port : ", self.neighborInfos[id_3rdmaxlatency][1])
-                            print("deleting key 4 =  ", id_4thmaxlatency, " port : ", self.neighborInfos[id_4thmaxlatency][1])
-                            print("deleting key 5 =  ", id_5thmaxlatency, " port : ", self.neighborInfos[id_5thmaxlatency][1])
-                            print("deleting key 6 =  ", id_6thmaxlatency, " port : ", self.neighborInfos[id_6thmaxlatency][1])            
-                            print("deleting key 7 =  ", id_7thmaxlatency, " port : ", self.neighborInfos[id_7thmaxlatency][1])
-                            print("deleting key 8 =  ", id_8thmaxlatency, " port : ", self.neighborInfos[id_8thmaxlatency][1])
-                            print("deleting key 9 =  ", id_9thmaxlatency, " port : ", self.neighborInfos[id_9thmaxlatency][1])
-                            print("deleting key 10 =  ", id_10thmaxlatency, " port : ", self.neighborInfos[id_10thmaxlatency][1])
-                            print("deleting key 11 =  ", id_11thmaxlatency, " port : ", self.neighborInfos[id_11thmaxlatency][1])            
-                            print("deleting key 12 =  ", id_12thmaxlatency, " port : ", self.neighborInfos[id_12thmaxlatency][1])
-                            print("deleting key 13 =  ", id_13thmaxlatency, " port : ", self.neighborInfos[id_13thmaxlatency][1])
-                            print("deleting key 14 =  ", id_14thmaxlatency, " port : ", self.neighborInfos[id_14thmaxlatency][1])
-                            print("deleting key 15 =  ", id_15thmaxlatency, " port : ", self.neighborInfos[id_15thmaxlatency][1])
-                            del self.neighborInfos[id_maxlatency]
-                            del self.neighborInfos[id_2ndmaxlatency]
-                            del self.neighborInfos[id_3rdmaxlatency]
-                            del self.neighborInfos[id_4thmaxlatency]
-                            del self.neighborInfos[id_5thmaxlatency]        
-                            del self.neighborInfos[id_6thmaxlatency]
-                            del self.neighborInfos[id_7thmaxlatency]
-                            del self.neighborInfos[id_8thmaxlatency]
-                            del self.neighborInfos[id_9thmaxlatency]
-                            del self.neighborInfos[id_10thmaxlatency] 
-                            del self.neighborInfos[id_11thmaxlatency]
-                            del self.neighborInfos[id_12thmaxlatency]
-                            del self.neighborInfos[id_13thmaxlatency]
-                            del self.neighborInfos[id_14thmaxlatency]
-                            del self.neighborInfos[id_15thmaxlatency] 
-
-
-                        if len(self.neighborInfos)>20 and len(self.neighborInfos)<=25:
-                            print("DELETING 10 neighbors")
-                            print("deleting key 1 =  ", id_maxlatency, " port : ", self.neighborInfos[id_maxlatency][1])            
-                            print("deleting key 2 =  ", id_2ndmaxlatency, " port : ", self.neighborInfos[id_2ndmaxlatency][1])
-                            print("deleting key 3 =  ", id_3rdmaxlatency, " port : ", self.neighborInfos[id_3rdmaxlatency][1])
-                            print("deleting key 4 =  ", id_4thmaxlatency, " port : ", self.neighborInfos[id_4thmaxlatency][1])
-                            print("deleting key 5 =  ", id_5thmaxlatency, " port : ", self.neighborInfos[id_5thmaxlatency][1])
-                            print("deleting key 6 =  ", id_6thmaxlatency, " port : ", self.neighborInfos[id_6thmaxlatency][1])            
-                            print("deleting key 7 =  ", id_7thmaxlatency, " port : ", self.neighborInfos[id_7thmaxlatency][1])
-                            print("deleting key 8 =  ", id_8thmaxlatency, " port : ", self.neighborInfos[id_8thmaxlatency][1])
-                            print("deleting key 9 =  ", id_9thmaxlatency, " port : ", self.neighborInfos[id_9thmaxlatency][1])
-                            print("deleting key 10 =  ", id_10thmaxlatency, " port : ", self.neighborInfos[id_10thmaxlatency][1])
-                            del self.neighborInfos[id_maxlatency]
-                            del self.neighborInfos[id_2ndmaxlatency]
-                            del self.neighborInfos[id_3rdmaxlatency]
-                            del self.neighborInfos[id_4thmaxlatency]
-                            del self.neighborInfos[id_5thmaxlatency]        
-                            del self.neighborInfos[id_6thmaxlatency]
-                            del self.neighborInfos[id_7thmaxlatency]
-                            del self.neighborInfos[id_8thmaxlatency]
-                            del self.neighborInfos[id_9thmaxlatency]
-                            del self.neighborInfos[id_10thmaxlatency]     
-
-
-                        if len(self.neighborInfos)>15 and len(self.neighborInfos)<=20:
-                            print("DELETING 5 neighbors")
-                            print("deleting key 1 =  ", id_maxlatency, " port : ", self.neighborInfos[id_maxlatency][1])            
-                            print("deleting key 2 =  ", id_2ndmaxlatency, " port : ", self.neighborInfos[id_2ndmaxlatency][1])
-                            print("deleting key 3 =  ", id_3rdmaxlatency, " port : ", self.neighborInfos[id_3rdmaxlatency][1])
-                            print("deleting key 4 =  ", id_4thmaxlatency, " port : ", self.neighborInfos[id_4thmaxlatency][1])
-                            print("deleting key 5 =  ", id_5thmaxlatency, " port : ", self.neighborInfos[id_5thmaxlatency][1])    
-                            del self.neighborInfos[id_maxlatency]
-                            del self.neighborInfos[id_2ndmaxlatency]
-                            del self.neighborInfos[id_3rdmaxlatency]
-                            del self.neighborInfos[id_4thmaxlatency]
-                            del self.neighborInfos[id_5thmaxlatency]
+                       
+                        
+                       
 
                         n=0
                                                 

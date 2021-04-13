@@ -153,37 +153,8 @@ class ExpPlatformManager(PlatformManager):
         #                 loc_lowest_performance = key
         #                 print("loc_lowest_performance  =  ", loc_lowest_performance, "loc ip : ", loc_lowest_performance.ip, "loc port : ", loc_lowest_performance.port)
 
-        #                 if n==1:
-        #                     dbgprint("Sending Request To Sleep :"+str(loc_lowest_performance))
-        #                     self.msgmon.sendCommand(COMMAND_ASKTOSLEEPEXP, self, loc_lowest_performance.ip, loc_lowest_performance.port)
-        #                     n=n-1
-            
-        #     listofbenches.clear()
-        #     portlist.clear()
-        #     lowPerformersDict.clear()           
-                        
-                    #dbgprint("before while")
-                    #while n>0:
-                    # if loc.port == 30003: 
-                    #     dbgprint("after loc.port == 30003")
-                    #     listofbenches.append(max_Bench)
-                    #     #dbgprint("Lowest performing node, ID : "+str(key)+" IP : "+str(loc.ip)+" Port : "+str(loc.port)+" with BENCH = "+str(max_Bench) )
-                    #     portlist.append(loc.port)
-                    #     time.sleep(10)
-                    #     dbgprint("Portlist after delay : "+str(portlist)+" from port "+str(node_port))
-                    #     #n=0
-                    #dbgprint("Port List before artificial delay : "+str(portlist)+" from port "+str(node_ip))
-                        # # for iport in range(len(portlist)):
-                        # #     if not portlist[iport]==loc.port:
-                        # #         portlist.append(loc.port)
-                        # #         dbgprint("Port List : ",portlist)
-
-                        # dbgprint("Making communication with lowest performing node "+str(loc.port)+" artificially slower")
-                        # os.system('sudo tc qdisc add dev {0} root handle 1: prio priomap 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0'.format(host, loc.port, loc.port, delay))
-                        # os.system('sudo tc qdisc add dev {0} parent 1:2 handle 20: netem delay {3}'.format(host, loc.port, loc.port, delay))
-                        # os.system('sudo tc filter add dev {0} parent 1:0 protocol ip u32 match ip sport {1} 0xffff flowid 1:2'.format(host, loc.port, loc.port, delay))  
-                        # n=0      
-            #os.system('sudo tc qdisc del dev lo root')    #to delete the delay       
+    
+                    
 
 
     def startExperiment(self):
