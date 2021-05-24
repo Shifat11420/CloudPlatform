@@ -75,6 +75,9 @@ class MessageDispatcher(LineReceiver):
                 else:
                     #Error
                     dbgprint("Cannot have two raw handlers in a row")
+                # print("putting delay on receiver!")
+                # print("received data type :", type(data))
+                # time.sleep(0.05)    
                 self.messagehandler.WriteResponse(self.transport)
                 if(self.messagehandler.LoseConnection()):
                     self.transport.loseConnection()
