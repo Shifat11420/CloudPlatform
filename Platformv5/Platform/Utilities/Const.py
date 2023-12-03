@@ -18,6 +18,7 @@ STOPNOWORK = 70
 
 DEBUG = True
 COMMA = ","
+SEMICOLON = ";"
 PORT = 15000
 FILECHUNK = 100
 LINEDELIM = "\r\n"
@@ -87,6 +88,7 @@ COMMAND_CONTAINERRESPONSE = "ContainerResponse"
 COMMAND_RECEIVEEXPNODE = "ReceiveExpNode"
 COMMAND_LATENCYREPORTNODE = "LatencyReportNode"               ##
 COMMAND_BENCHREPORTNODE = "BenchReportNode"               ##
+COMMAND_LATENCYMESSAGEGENERATOR = "LatencyMessageGenerator"
 
 
 COMMAND_GETBENCH = "GetBench"
@@ -114,6 +116,9 @@ COMMAND_TASKLINK = "TaskLink"
 COMMAND_ASKTOSLEEP = "AskToSleep"               ##
 COMMAND_ASKTOSLEEPEXP = "AskToSleepExp"              ##
 
+COMMAND_DROPBYLATENCY = "DropNeighbor"        ##
+COMMAND_DROPBYLATENCYNEWALGO = "DropNeighborByNewAlgorithm" ##
+
 TAG = "Tag"
 TASKGRAPHID = "TaskGraphID"
 TASKCOUNT = "TaskCount"
@@ -128,15 +133,28 @@ STR_PORT = "PORT"
 STR_ID = "ID"
 STR_LOC = "LOCATION"
 
-SLOWESTNODE = "SlowestNode"                           ##
-SLOWEST_ID = "Slowest_ID"             ##
-#SLOWEST_IP = "Slowest_IP"             ##
-#SLOWEST_PORT = "Slowest_Port"         ##
-MAX_LATENCY = "Maximum Latency"       ##
+SLOWESTNODE = "SlowestNode"                   ##
+SLOWEST_ID = "Slowest_ID"                     ##
+#SLOWEST_IP = "Slowest_IP"                    ##
+#SLOWEST_PORT = "Slowest_Port"                ##
+MAX_LATENCY = "Maximum Latency"               ##
+#SORTED_LATENCY_LIST = "List of latencies"    ##
+LATENCY_LIST = "List of latencies"            ##
+LATENCY_DICT = "Dictionary of latencies"      ##
+AVGLATENCY = "avgLatency"
 
-LOWESTPERFORMINGNODE = "LowestPerformingNode"                           ##
+CLOSEPORTS = "Close_ports"              ##
+LESSCLOSEPORTS = "Less_close_ports"     ##
+FARPORTS = "Far_ports"                  ##
+
+NODESPORTSTODROP = "nodes_ports_to_drop"             ##
+
+LOWESTPERFORMINGNODE = "LowestPerformingNode"           ##
 LOWESTPERFORMING_ID = "LowestPerforming_ID"             ##
-MAX_BENCH = "Maximum Bench"       ##
+MAX_BENCH = "Maximum Bench"                             ##
+
+
+
 
 
 IMAGE = "Image"

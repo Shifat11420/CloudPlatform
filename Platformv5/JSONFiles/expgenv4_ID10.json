@@ -3,13 +3,13 @@
 "prob_connected":"0.2",
 "exp_time":"800",
 "container_count":"400",
- "vec_flows":[["-1.0","0.0"],["0.0","0.0"]],
- "vec_stases":[["0.0","0.0"],["0.0","0.0"]],
- "swapTimes":["300"],
+ "vec_flows":[["-1.0","-0.5","0.0"],["-1.0","0.5","0.0"]],
+ "vec_stases":[["0.0","0.0","0.0"],["0.0","0.0","0.0"]],
+ "swapTimes":["30"],
  "graphseed":"1626",
  "expectedTime":"500",
 "container_params":{
-    "args":"python Sandbox/simplematmul.py 100",
-    "files":["simplematmul.py"],
+    "args":"python Sandbox/simplematmulH.py choosefromdisk 100 100 120",
+    "files":["simplematmulH.py"],
     "isdocker":"False"}
 }

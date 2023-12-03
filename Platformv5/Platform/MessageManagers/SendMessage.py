@@ -24,19 +24,16 @@ class MessageSender(MessageDispatcher):
         val = self.messagegen.read()
         firstmsg = val
         while(val != None):           
-            print("type of val 1 ",type(val))
             expprint("SendMessage:"+str(val))
             dbgprint("SendMessage:Started sending msg:"+str(val))
-            if val.find("ReceiveContainer") != -1:
-                print("Found!")
-                # print("before delay")
-                # time.sleep(0.05)
-            else:
-                print ("Not found!")
+            # if val.find("ReceiveContainer") != -1:
+            #     print("Found!")
+            #     # print("before delay")
+            #     # time.sleep(0.05)
+            # else:
+            #     print ("Not found!")
             self.transport.write(val.encode('utf-8'))
-            print("type of val 2 ",type(val))
             val = self.messagegen.read()
-            print("type of val 3 ",type(val))
         
             
         dbgprint("SendMessage: Val is none")

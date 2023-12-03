@@ -4,3 +4,5 @@ Platformv5/plat.tar
 __pycache__
 *log*
 *~
+*000.txt
+output*.txt

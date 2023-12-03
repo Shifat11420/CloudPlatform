@@ -5,19 +5,19 @@ import time
 #import random
 from GrabAllLogs import PullAllMchnFiles
 
-remotedir = "/home/shifat"
-remotenet = "eno1"   #"eth0"
+remotedir = "/home/shifat/Desktop"                ##for shifat's laptop
+remotenet = "enp94s0f0"   
 
 distplatform = "bpete16/distplatform"
 platformdir = "Platformv5"
-platfile = "plat50conn.tar"
+platfile = "plat.tar"
 
 debug = "False"
 #bashfile = "StartNTGPM.bash"
 bashfile = "StartNBenchPM.bash"
 
 safe = False
-runs = range(5)
+runs = range(15)
 
 def scpcommand(host, port, infolder, filename, outfolder):
     os.system('scp -P {0} {1}:{2}/{3} {4}/{3}'.format(port, host, infolder, filename, outfolder))
@@ -64,7 +64,7 @@ def runC(host, port, ipc, portc, version, numnodes, expfile, outfile, dockerfile
     loadDocker(host, port, dockerfile)
     time.sleep(30)
     cmd = 'docker run '+cscmd+' --net="host" --privileged '+distplatform+':'+str(version)+' python Platform/ExpPlatformManager.py "SourceIP=' + str(ipc) + '" "Source_Port=' + str(portc) + '" "Exp_File='+str(expfile)+ '" "Debug=True" "Exp_Index=' + str(expindex) +'" "Location=' + str(location) +'"  &> ' + outfile + ' &'
-
+    
     sshcommand(host, port, cmd)
     print("COMMANDCTRL:"+cmd)
 

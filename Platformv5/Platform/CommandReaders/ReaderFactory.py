@@ -6,7 +6,9 @@ from CommandReaders.HelloReader import HelloReader, HelloResponder, TerminateRea
 from CommandReaders.TCPFileReader import TCPFileReader
 from CommandReaders.AskForWorkReader import AskForWorkReader
 from CommandReaders.ExperimentControlReader import ReceiveExpNodeReader
+from CommandReaders.LatencyReader import ReceiveLatencyReader
 from CommandReaders.LatencyReportReader import LatencyReportReader
+from CommandReaders.DropNbrbyLatencyReader import DropNeighborbyLatencyReader
 from CommandReaders.BenchReportReader import BenchReportReader
 from CommandReaders.LowperfReader import LowperfReader
 from CommandReaders.AsktosleepExpReader import AsktosleepExpReader
@@ -62,7 +64,7 @@ class ReaderFactory():
         if(name.startswith(COMMAND_ENDSERVER.encode('utf-8'))):
             return EndServerReader(self.context)
         if(name.startswith(COMMAND_RECEIVEEXPNODE.encode('utf-8'))):
-	        return ReceiveExpNodeReader(self.context)
+            return ReceiveExpNodeReader(self.context)
         if(name.startswith(COMMAND_GETBENCH.encode('utf-8'))):
             return SendBenchReader(self.context)
         if(name.startswith(COMMAND_RECEIVEBENCH.encode('utf-8'))):
@@ -89,13 +91,19 @@ class ReaderFactory():
             return ConnRespReader(self.context)
 
         if(name.startswith(COMMAND_LATENCYREPORTNODE.encode('utf-8'))):                   ##
-    	    return LatencyReportReader(self.context)                                      ##
+            return LatencyReportReader(self.context)                                      ##
         if(name.startswith(COMMAND_BENCHREPORTNODE.encode('utf-8'))):                     ##
-    	    return BenchReportReader(self.context)                                        ##
+            return BenchReportReader(self.context)                                        ##
         if(name.startswith(COMMAND_ASKTOSLEEP.encode('utf-8'))):                     ##
-    	    return LowperfReader(self.context)    
+            return LowperfReader(self.context)    
         if(name.startswith(COMMAND_ASKTOSLEEPEXP.encode('utf-8'))):                     ##
-    	    return AsktosleepExpReader(self.context)     
+            return AsktosleepExpReader(self.context)     
+        if(name.startswith(COMMAND_DROPBYLATENCY.encode('utf-8'))):                     ##
+            return DropNeighborbyLatencyReader(self.context)      
+        if(name.startswith(COMMAND_DROPBYLATENCYNEWALGO.encode('utf-8'))):                     ##
+            return DropNeighborbyLatencyReader(self.context)           
+        if(name.startswith(COMMAND_LATENCYMESSAGEGENERATOR.encode('utf-8'))):                     ##
+            return ReceiveLatencyReader(self.context)       
      
 
         

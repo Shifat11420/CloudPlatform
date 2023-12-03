@@ -3,10 +3,12 @@ from Utilities.Const import *
 from Utilities.FileInputTokenize import ArgFIP
 from Utilities.FileUtil import SetOutputFolder, expprint
 from DistMethods.DistFactory import getRedistDict
+from DistMethods.DistFactory import getRedistDict_3D
 from DistMethods.CalcGradDescent import CalcSubLevel
 from DistMethods.VectorContainer import VectorContainer
 from CommandMessageGenerators.QueueLenMessageGenerator import QueueLenMessageGenerator
 from CommandMessageGenerators.BenchMessageGenerator import BenchMessageGenerator
+from CommandMessageGenerators.LatencyReportGenerator import LatencyReportNode
 from CommandMessageGenerators.BenchReportGenerator import BenchReportNode
 from CommandMessageGenerators.LowperfMessageGenerator import LowperfNode
 from CommandMessageGenerators.ContainerMessageGenerator import ContainerMessageGenerator
@@ -30,6 +32,7 @@ class BenchNodePM(NodePlatformManager):
         self.neighborQueueLen = {}
         self.neighborSubQueueLen = {}
         self.neighborBench = {}
+        self.neighborLatency = {}   #*
         self.neighborConn = {}
         self.nConnStartTimes = {}
         self.intervalCount = 0
@@ -71,6 +74,14 @@ class BenchNodePM(NodePlatformManager):
         dbgprint("set nb:"+str(n_ID))
         dbgprint("Set NBench:"+str(n_ID)+":"+str(n_bench))
         self.neighborBench[n_ID] = float(n_bench)
+
+
+    def SetNeighborLatency(self, n_ID, nodeip, nodeport, n_latency):  
+        dbgprint("set nlat:"+str(n_ID))
+        dbgprint("Set NLatency:"+str(n_ID)+":"+str(n_latency))
+        self.neighborLatency[n_ID] = float(n_latency)
+        #dbgprint("just the dictionary : "+str(self.neighborLatency))
+  
 
     def SetNeighborConn(self, n_ID, n_conn):
         dbgprint("set conn:" + str(n_ID))
@@ -144,8 +155,14 @@ class BenchNodePM(NodePlatformManager):
                         self.msgmon.sendGen(comgen, vals[0], vals[1])
 
                     self.TestConnection(nid)
-                self.redistributeWork()
-        ####################
+                #self.redistributeWork()
+                self.redistributeWork_3D()         #*
+
+                for nid in list(self.neighborLatency):              #*
+                    myneighbrLatency = float(self.neighborLatency[nid])         #*                             
+                    dbgprint("Latency of neighbor : ID : "+str(nid)+" is "+str(myneighbrLatency))        #*
+
+        #################### working with performance (Bench info)
                 for nid in list(self.neighborBench):
                     myneighbrBench = float(self.neighborBench[nid])                                      
                     dbgprint("Bench of neighbor : ID : "+str(nid)+" is "+str(myneighbrBench))
@@ -258,11 +275,11 @@ class BenchNodePM(NodePlatformManager):
                 print("this neighbor is deleted")
                 nconn = 0
             #nconn = self.neighborConn[nid]     #.get(nid, 0)         ######fix it
-            print("nconn indi nid", nid)
-            print("nconn indi", nconn)
+            # print("nconn indi nid", nid)
+            # print("nconn indi", nconn)
             
-        print("nconn list : ", nconns)
-        print("nids  : ", nids)
+        # print("nconn list : ", nconns)
+        # print("nids  : ", nids)
             # nids.append(nid)
             # print("nids  : ", nid)
 
@@ -303,6 +320,93 @@ class BenchNodePM(NodePlatformManager):
                 #cmgen = ComboGen(self, mgens)
                 #vals = self.neighborInfos[nid]
                 #self.msgmon.sendGen(cmgen, self, vals[0], vals[1])
+
+
+    ##redistribute work for 3D scheduling
+    def redistributeWork_3D(self):
+        btotal = 0
+        qltotal = 0
+        latencytotal = 0          #*
+        nids = []
+        nbenches = []
+        nsublevels = []
+        nsubleveldict = CalcSubLevel(self.neighborSubQueueLen)
+        nqls = []
+        nlatencies = []     #*
+        nconns = []
+        
+        
+        dbgprint("In redistWork")
+        nids.append(self.idval)
+        nbenches.append(float(self.GetBench()))
+        nqls.append(self.GetQueueLen())
+        nlatencies.append(0.0)        #*
+        nsublevels.append(0)
+        mybench = self.GetBench()
+        btotal = float(mybench)
+        latencytotal = 0.0               #*
+
+        #next line used to be shortcut to stop last job movement
+        qltotal = self.GetQueueLen()
+        conntotal = 0
+        nsublvltotal = 0
+        for nid in self.neighborQueueLen:
+            if not nid in nsubleveldict:
+                nsublevels.append(0)
+            else:
+                nsublevels.append(nsubleveldict[nid])
+                nsublvltotal = nsublvltotal + nsubleveldict[nid]
+            if not nid in self.neighborBench:
+                self.neighborBench[nid] = float(mybench)          
+            # if not nid in self.neighborLatency:
+            #     self.NeighborsLatencyDict[nid] = 0.0             
+
+            
+            nbench = float(self.neighborBench[nid])
+            btotal = btotal + nbench
+            nbenches.append(nbench)
+
+            nql = self.neighborQueueLen[nid]
+            qltotal = qltotal + nql
+            nqls.append(nql)
+
+            nlatency = float(self.neighborLatency[nid])          #*
+            latencytotal = latencytotal + nlatency                #*
+            nlatencies.append(nlatency)                           #*
+
+        
+            try:
+                nconn = self.neighborConn[nid]
+                conntotal = conntotal + nconn
+                nconns.append(nconn)
+                nids.append(nid)
+                
+            except KeyError:
+                print("this neighbor is deleted")
+                nconn = 0
+            
+        dictResults = getRedistDict_3D(self.VContainer, nids, nbenches, btotal, nqls, qltotal, nsublevels, nsublvltotal, nlatencies, latencytotal)   #* for 3D scheduling
+        dbgprint("RDWORK:"+str(len(dictResults)))
+        dbgprint("QL:"+str(self.GetQueueLen()))
+        for nid in dictResults:
+            if(nid != self.idval):
+                #mgens = []
+                dbgprint("RDWORK:REDIST!")
+                try:
+                    vals = self.neighborInfos[nid]
+                    for i in range(0, dictResults[nid]):
+                        worktosend = self.GetWorkToSend()
+                        if not worktosend is None:
+                            mgen = ContainerMessageGenerator(worktosend, self)
+                            dbgprint("RDWORK:SENDING:"+str(worktosend.idstr))
+                            dbgprint("RDWORK:DEST:"+str(vals[0])+":"+str(vals[1]))
+                            self.msgmon.sendGen(mgen, vals[0], vals[1])       
+                except KeyError:
+                    print("No ID exist!")                
+                    #mgens.append(mgen)
+                #cmgen = ComboGen(self, mgens)
+                #vals = self.neighborInfos[nid]
+                #self.msgmon.sendGen(cmgen, self, vals[0], vals[1])         
 
 if __name__ == "__main__":
     global DEBUG

@@ -1,13 +1,23 @@
-/home/gb/Software/CloudPlatform/v4log1/
+/home/shifat/Desktop/CloudPlatform/47VM/CA-chooseRandom/multrun/
+/home/shifat/Desktop/CloudPlatform/47VM/BP-chooseRandom/multrun/
+/home/shifat/Desktop/CloudPlatform/47VM/BP-chooseRandom/multrun-perfQLonly/
 *****
-/home/gb/Software/CloudPlatform/v4log1-results/OutFiles/v4log1/
+/home/shifat/Desktop/CloudPlatform/log2-results/OutFiles/log1_BN/
+/home/shifat/Desktop/CloudPlatform/log2-results/OutFiles/log2_BN/
+/home/shifat/Desktop/CloudPlatform/log2-results/OutFiles/log3_BN/
 *****
-/home/gb/Software/CloudPlatform/v4log1-results/v4VarsID12/v4log1.csv
+/home/shifat/Desktop/CloudPlatform/log2-results/VarsBN/log1_BN.csv
+/home/shifat/Desktop/CloudPlatform/log2-results/VarsBN/log2_BN.csv
+/home/shifat/Desktop/CloudPlatform/log2-results/VarsBN/log3_BN.csv
 *****
-/home/gb/Software/CloudPlatform/v4log1-results/v4VarsID12/
+/home/shifat/Desktop/CloudPlatform/log2-results/VarsBN/
 *****
-/home/gb/Software/CloudPlatform/v4log1-results/v4log_ID12.pdf
+/home/shifat/Desktop/CloudPlatform/log2-results/log_BN.pdf
 *****
-This is a Test
+CA(QL, Perf, Latency)
+BP(QL)
+BP(QL, Perf)
 *****
-v4log1.csv
+log1_BN.csv
+log2_BN.csv
+log3_BN.csv

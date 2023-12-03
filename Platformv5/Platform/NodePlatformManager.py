@@ -7,6 +7,7 @@ from CommandMessageGenerators.MessageGenerator import StringMessageGenerator
 from CommandMessageGenerators.MessageRepeat import MsgMonitor
 from CommandMessageGenerators.ExpMessageGenerator import ReceiveExpNode
 from CommandMessageGenerators.LatencyReportGenerator import LatencyReportNode
+from CommandMessageGenerators.LatencyMessageGenerator import LatencyMessageGenerator
 from Utilities.Const import *
 from Utilities.FileInputTokenize import ArgFIP
 from Utilities.FileUtil import expprint, SetOutputFolder
@@ -17,6 +18,7 @@ import datetime
 import sys
 from PlatformManager import PlatformManager
 from DockerManagers.NasManager import GetRValueFromNAS
+import ast
 
 
 DEFAULTBENCHTIME = 400
@@ -224,24 +226,20 @@ class NodePlatformManager(PlatformManager):
                             portlist.append(int(vals[1]))
                         
 
-                            if abs(int(self.location) - int(vals[2]))>= 50 and abs(int(self.location) - int(vals[2]))< 100: 
-                                sleeptime = 0.0005*10
-                                dbgprint("yay")
-                            elif abs(int(self.location) - int(vals[2]))>= 100 and abs(int(self.location) - int(vals[2]))< 200: 
-                                sleeptime = 0.001*10
-                                dbgprint("yaay")
-                            elif abs(int(self.location) - int(vals[2]))>= 200 and abs(int(self.location) - int(vals[2]))< 300: 
-                                sleeptime = 0.003*10
-                                dbgprint("yaaay")       
-                            elif abs(int(self.location) - int(vals[2]))>= 300 and abs(int(self.location) - int(vals[2]))< 400: 
-                                sleeptime = 0.005*10
-                                dbgprint("yaaaay")        
-                            elif abs(int(self.location) - int(vals[2]))>= 400:
-                                sleeptime = 0.007*10
-                                dbgprint("yaaaayyyy")                             
+                            if abs(int(self.location) - int(vals[2]))> 50 and abs(int(self.location) - int(vals[2]))<= 100: 
+                                sleeptime = 0.0005   ##0.5ms
+                            elif abs(int(self.location) - int(vals[2]))> 100 and abs(int(self.location) - int(vals[2]))<= 200: 
+                                sleeptime = 0.001    ##1ms
+                            elif abs(int(self.location) - int(vals[2]))> 200 and abs(int(self.location) - int(vals[2]))<= 300: 
+                                sleeptime = 0.003     ##3ms      
+                            elif abs(int(self.location) - int(vals[2]))> 300 and abs(int(self.location) - int(vals[2]))<= 400: 
+                                sleeptime = 0.005     ##10ms              
+                            elif abs(int(self.location) - int(vals[2]))> 400:
+                                sleeptime = 0.007    ##14ms                       
                             else:
                                 sleeptime = 0.0
-                                dbgprint("nay")
+
+                          
 
                             host = vals[0] 
                             port = vals[1] 
@@ -286,33 +284,47 @@ class NodePlatformManager(PlatformManager):
                        
                             dbgprint("Average communication latency of neighbor : ID : "+str(nid)+" IP : "+str(vals[0])+" PORT : "+str(vals[1])+" LOCATION : "+str(vals[2])+" is "+str(avgLatency))
 
-                            if nid in NeighborsLatencyDict:
-                                NeighborsLatencyDict[nid].append(avgLatency)
+                            if vals[1] in NeighborsLatencyDict:
+                                NeighborsLatencyDict[vals[1]].append(avgLatency)
                             else:
-                                NeighborsLatencyDict.update({nid:[avgLatency]})                           
+                                NeighborsLatencyDict.update({vals[1]:[avgLatency]})                           
                             NeighborsLatencyList.append(avgLatency)
+
+                            ##insert is a function to put an element into a dictionary to a specific position
+                            insert = lambda _dict, obj, pos: {k: v for k, v in (list(_dict.items())[:pos] + list(obj.items()) + list(_dict.items())[pos:])}
+                            NeighborsLatencyDictall = insert(NeighborsLatencyDict, {self.Port:[0.0]},0)
                               
+                             
+                            mgen = LatencyMessageGenerator(self, self.idval, self.IP, self.Port, avgLatency)         #*
+                            dbgprint("Sending Latency info to "+str(vals[0])+":"+str(vals[1]))
+                            self.msgmon.sendGen(mgen, vals[0], vals[1]) #*
+
                         dbgprint("Neighbors Latency Dict  : "+str(NeighborsLatencyDict))
                         dbgprint("Neighbors Latency List : "+str(NeighborsLatencyList))
+                        dbgprint("Neighbors Latency Dict All : "+str(NeighborsLatencyDictall))
+                        
+                        # #NeighborsLatencyDict[self.idval] = [0.0]
+                        
 
                         # #######           new code for exp controller algo starts              ######
 
-                        # portlist.append(int(self.Port))
-                        # print("list of ports : ", portlist)
+                        portlist.append(int(self.Port))
+                        print("list of ports : ", portlist)
 
-                        # NeighborsLatencyList.append(0.0)    
-                        # print("all_LatencyList : ",NeighborsLatencyList)
+                        NeighborsLatencyList.append(0.0)    
+                        print("all_LatencyList : ",NeighborsLatencyList)
                         
-                        # all_LatencyList = [x for _,x in sorted(zip(portlist,NeighborsLatencyList))]
+                        all_LatencyList = [x for _,x in sorted(zip(portlist,NeighborsLatencyList))]
 
-                        # dbgprint("All latency list : "+str(all_LatencyList))
+                        dbgprint("All latency list : "+str(all_LatencyList))
 
                         # #######          new code for exp controller algo ends        ######
 
 
                         #max_latency = max(NeighborsLatencyList)
                         max_latency = max(NeighborsLatencyList)
-
+                        
+                        sorted_NeighborsLatencyList = []
                         for key in NeighborsLatencyDict:
                             for x in range(len(NeighborsLatencyDict[key])):
                                 if max_latency == NeighborsLatencyDict[key][x]:
@@ -320,296 +332,47 @@ class NodePlatformManager(PlatformManager):
                                                 
                         sorted_NeighborsLatencyList = sorted(NeighborsLatencyList)
                         print("Sorted Neighbors Latency List : ", sorted_NeighborsLatencyList)
+                             
 
-#########take out comments
-                        # d={}        #dict for latency
-                        # c={}        #dict  for id  
-                        # for i in range(1,len( self.neighborInfos)+1):
-                        #     #if len( self.neighborInfos)>=i:
-                        #     d["the{0}th_highest_latency".format(i)] = sorted_NeighborsLatencyList[-i]
-                        #     print(d)
-                        #     dbgprint("the"+str(i)+"th_highest_latency is "+str(d["the{0}th_highest_latency".format(i)]))
-                        # #dbgprint("the"+str(len( self.neighborInfos))+"th_highest_latency is "+str(d["the{0}th_highest_latency".format(len( self.neighborInfos))]))        
-                                
-                        #     for nid in  self.neighborInfos:
-                        #         vals =  self.neighborInfos[nid]
-                        #         for key in NeighborsLatencyDict:
-                        #             for x in range(len(NeighborsLatencyDict[key])):
-                        #                 if d["the{0}th_highest_latency".format(i)] == NeighborsLatencyDict[key][x]:
-                        #                     c["id_{0}thmaxlatency".format(i)] = key
-                        # for i in range(1,len( self.neighborInfos)+1):  #range(len( self.neighborInfos)):   
-                        #     #if len( self.neighborInfos)>=i:                     
-                        #     dbgprint("the"+str(i)+"th id is "+str(c["id_{0}thmaxlatency".format(i)]))  #i+1 to i
-
-                        # dbgprint("highest_latency = "+str(d["the{0}th_highest_latency".format(1)])+ " and "+str(len( self.neighborInfos))+ "th_highest_latency = "+str( d["the{0}th_highest_latency".format(len( self.neighborInfos))]))
-                        # max_latency = d["the{0}th_highest_latency".format(1)]
-                        # id_maxlatency = c["id_{0}thmaxlatency".format(i)]
-#########take out comments                       
-                        drop_nbr_size = 0                       
-
-                        ###########
-                        # if len( self.neighborInfos)>13 and len( self.neighborInfos)<=18:
-                        #     drop_nbr_size = 2
-                        # if len( self.neighborInfos)>18 and len( self.neighborInfos)<=23:  
-                        #     drop_nbr_size = 4  
-                        # if len( self.neighborInfos)>23 and len( self.neighborInfos)<=28:
-                        #     drop_nbr_size = 6  
-                        # if len( self.neighborInfos)>28 and len( self.neighborInfos)<=33:
-                        #     drop_nbr_size = 9
-                        # if len( self.neighborInfos)>33 and len( self.neighborInfos)<=38:  
-                        #     drop_nbr_size = 15    #12  
-                        # if len( self.neighborInfos)>38 and len( self.neighborInfos)<=42:
-                        #     drop_nbr_size = 18   #15      
-                        # if len( self.neighborInfos)>42 and len( self.neighborInfos)<=45:
-                        #     drop_nbr_size = 18   
-                           
-                        # ########################   local test only   ######################################
-                        # if len( self.neighborInfos)>=5 and len( self.neighborInfos)<9:          
-                        #     drop_nbr_size = 2  
-                        # print("self location = ", self.location, "neighbor location = ", vals[2])      
-                        # if (self.location == 10 and vals[2] ==51) or (self.location == 51 and vals[2] == 10):
-                        #     pass
-                        # if (self.location == 51 and vals[2] ==69) or (self.location == 69 and vals[2] == 51):
-                        #     pass                                     
-                        # if (self.location == 69 and vals[2] ==101) or (self.location == 101 and vals[2] == 69):
-                        #     pass
-                        # if (self.location == 101 and vals[2] ==149) or (self.location == 149 and vals[2] == 101):
-                        #     pass
-                        # if (self.location == 149 and vals[2] ==230) or (self.location == 230 and vals[2] == 149):
-                        #     pass
-                        # if (self.location == 230 and vals[2] ==301) or (self.location == 301 and vals[2] == 230):
-                        #     pass
-                        # else:
-                        #     del self.neighborInfos[nid]
-                        #     print("self port : ", self.Port, "neighbor deleted, port : ", vals[1])
-                        # #################################################
-                        
-                        ########################   full graph test only   ######################################
-                        # if (self.Port==11000) or (self.Port==12000) or (self.Port==13000) or (self.Port==14000) or (self.Port==15000) or (self.Port==16000) or (self.Port==17000) or(self.Port==18000) or (self.Port==19000) or ( self.Port==11100):                         
-                        #     drop_nbr_size = 0
-                        # else:
-                        #     drop_nbr_size = 32    
-                         
-
-                        ###################################   DROP NEIGHBORS #####################
-                        # print("DELETING slowest ",drop_nbr_size, " neighbors")
-                        # for k in range(drop_nbr_size):
-                        #     try:
-                        #         if self.neighborInfos[c["id_{0}thmaxlatency".format(k+1)]][1] == 11000 or self.neighborInfos[c["id_{0}thmaxlatency".format(k+1)]][1] == 12000 or self.neighborInfos[c["id_{0}thmaxlatency".format(k+1)]][1] == 13000 or self.neighborInfos[c["id_{0}thmaxlatency".format(k+1)]][1] == 14000 or self.neighborInfos[c["id_{0}thmaxlatency".format(k+1)]][1] == 15000 or self.neighborInfos[c["id_{0}thmaxlatency".format(k+1)]][1] == 16000 or self.neighborInfos[c["id_{0}thmaxlatency".format(k+1)]][1] == 17000 or self.neighborInfos[c["id_{0}thmaxlatency".format(k+1)]][1] == 18000 or self.neighborInfos[c["id_{0}thmaxlatency".format(k+1)]][1] == 19000 or self.neighborInfos[c["id_{0}thmaxlatency".format(k+1)]][1] == 11100 :
-                        #             pass
-                        #         else: 
-                        #             dbgprint("deleting key "+str(k+1)+ " =  "+str( c["id_{0}thmaxlatency".format(k+1)])+" port : "+str(self.neighborInfos[c["id_{0}thmaxlatency".format(k+1)]][1]))           
-                        #             del  self.neighborInfos[c["id_{0}thmaxlatency".format(k+1)]]
-                        #     except KeyError:
-                        #         print("neighbor is already droped")     
-                        # # #######################################
-
-                         
-                        dbgprint("Maximum communication latency : "+str(max_latency)+" for ID "+str(id_maxlatency))                 
+                       
+#?
+                        ######### sending latency information to experiment controller ############# 
+                        dbgprint("Maximum communication latency : "+str(max_latency)+" for PORT "+str(id_maxlatency))                 
                                            
-                        mgen = LatencyReportNode(self, self.idval, self.IP, self.Port, id_maxlatency, max_latency )
+                        mgen = LatencyReportNode(self, self.idval, self.IP, self.Port, id_maxlatency, max_latency, NeighborsLatencyDictall)#,NeighborsLatencyList )
                         dbgprint("Sending Latency Report To Exp at: "+str(self.Exp_IP)+":"+str(self.Exp_Port))
                         expprint("Sending Latency Report To Exp at: "+str(self.Exp_IP)+":"+str(self.Exp_Port))
                         self.msgmon.sendGen(mgen, self.Exp_IP, self.Exp_Port)   
-                       
-                        
-                       
-
-                        n=0
-                        # # # ########################  delete neighbors local test only   ######################################
-   
-                        # for nid in list(self.neighborInfos):
-                        #     vals = self.neighborInfos[nid] 
-                        #     print("self location = ", self.location, "neighbor location = ", vals[2])      
-                        #     if (int(self.Port) == 11100 and int(vals[1]) ==11105) or (int(self.Port) == 11105 and int(vals[1]) == 11100):
-                        #         pass
-                        #     elif (int(self.Port) == 11105 and int(vals[1]) ==11106) or (int(self.Port)== 11106 and int(vals[1]) == 11105):
-                        #         pass                                     
-                        #     elif (int(self.Port) == 11106 and int(vals[1]) ==11101) or (int(self.Port) == 11101 and int(vals[1]) == 11106):
-                        #         pass
-                        #     elif (int(self.Port) == 11101 and int(vals[1]) ==11102) or (int(self.Port) == 11102 and int(vals[1]) == 11101):
-                        #         pass
-                        #     elif (int(self.Port) == 11102 and int(vals[1]) ==11104) or (int(self.Port) == 11104 and int(vals[1]) == 11102):
-                        #         pass
-                        #     elif (int(self.Port) == 11104 and int(vals[1]) ==11103) or (int(self.Port) == 11103 and int(vals[1]) == 11104):
-                        #         pass
-                        #     elif (int(self.Port) == 11100 and int(vals[1]) ==12200) or (int(self.Port) == 12200 and int(vals[1]) == 11100):
-                        #         pass
-                        #     elif (str(self.Port).startswith("122") == True) and (str(vals[1]).startswith("122")==True):
-                        #         pass
-                        #     else:
-                        #         del self.neighborInfos[nid]
-                        #         print("self port : ", self.Port, "neighbor deleted, port : ", vals[1])
-                        # # #################################################
-
-                         # # ########################  delete neighbors cloud test only   ######################################
-   
-                        for nid in list(self.neighborInfos):
-                            vals = self.neighborInfos[nid] 
-                            print("self location = ", self.location, "neighbor location = ", vals[2])      
-                            if (int(self.Port) == 11000 and int(vals[1]) ==14000) or (int(self.Port) == 14000 and int(vals[1]) == 11000):
-                                pass
-                            elif (int(self.Port) == 14000 and int(vals[1]) ==13000) or (int(self.Port)== 13000 and int(vals[1]) == 14000):
-                                pass                                     
-                            elif (int(self.Port) == 13000 and int(vals[1]) ==12000) or (int(self.Port) == 12000 and int(vals[1]) == 13000):
-                                pass
-                            elif (int(self.Port) == 12000 and int(vals[1]) ==17000) or (int(self.Port) == 17000 and int(vals[1]) == 12000):
-                                pass
-                            elif (int(self.Port) == 17000 and int(vals[1]) ==15000) or (int(self.Port) == 15000 and int(vals[1]) == 17000):
-                                pass
-                            elif (int(self.Port) == 15000 and int(vals[1]) ==16000) or (int(self.Port) == 16000 and int(vals[1]) == 15000):
-                                pass
-                            elif (int(self.Port) == 16000 and int(vals[1]) ==19000) or (int(self.Port) == 19000 and int(vals[1]) == 16000):
-                                pass
-                            elif (int(self.Port) == 19000 and int(vals[1]) ==18000) or (int(self.Port) == 18000 and int(vals[1]) == 19000):
-                                pass                                                                                                              ##################
-                            if (int(self.Port) == 11001 and int(vals[1]) ==14001) or (int(self.Port) == 14001 and int(vals[1]) == 11001):
-                                pass
-                            elif (int(self.Port) == 14001 and int(vals[1]) ==13001) or (int(self.Port)== 13001 and int(vals[1]) == 14001):
-                                pass                                     
-                            elif (int(self.Port) == 13001 and int(vals[1]) ==12001) or (int(self.Port) == 12001 and int(vals[1]) == 13001):
-                                pass
-                            elif (int(self.Port) == 12001 and int(vals[1]) ==17001) or (int(self.Port) == 17001 and int(vals[1]) == 12001):
-                                pass
-                            elif (int(self.Port) == 17001 and int(vals[1]) ==15001) or (int(self.Port) == 15001 and int(vals[1]) == 17001):
-                                pass
-                            elif (int(self.Port) == 15001 and int(vals[1]) ==16001) or (int(self.Port) == 16001 and int(vals[1]) == 15001):
-                                pass
-                            elif (int(self.Port) == 16001 and int(vals[1]) ==19001) or (int(self.Port) == 19001 and int(vals[1]) == 16001):
-                                pass
-                            elif (int(self.Port) == 19001 and int(vals[1]) ==18001) or (int(self.Port) == 18001 and int(vals[1]) == 19001):
-                                pass                                                                                                              #######################
-                            elif (int(self.Port) == 11002 and int(vals[1]) ==14002) or (int(self.Port) == 14002 and int(vals[1]) == 11002):
-                                pass
-                            elif (int(self.Port) == 14002 and int(vals[1]) ==13002) or (int(self.Port)== 13002 and int(vals[1]) == 14002):
-                                pass                                     
-                            elif (int(self.Port) == 13002 and int(vals[1]) ==12002) or (int(self.Port) == 12002 and int(vals[1]) == 13002):
-                                pass
-                            elif (int(self.Port) == 12002 and int(vals[1]) ==17002) or (int(self.Port) == 17002 and int(vals[1]) == 12002):
-                                pass
-                            elif (int(self.Port) == 17002 and int(vals[1]) ==15002) or (int(self.Port) == 15002 and int(vals[1]) == 17002):
-                                pass
-                            elif (int(self.Port) == 15002 and int(vals[1]) ==16002) or (int(self.Port) == 16002 and int(vals[1]) == 15002):
-                                pass
-                            elif (int(self.Port) == 16002 and int(vals[1]) ==19002) or (int(self.Port) == 19002 and int(vals[1]) == 16002):
-                                pass
-                            elif (int(self.Port) == 19002 and int(vals[1]) ==18002) or (int(self.Port) == 18002 and int(vals[1]) == 19002):
-                                pass                                                                                                                   #######################
-                            elif (int(self.Port) == 11003 and int(vals[1]) ==14003) or (int(self.Port) == 14003 and int(vals[1]) == 11003):
-                                pass
-                            elif (int(self.Port) == 14003 and int(vals[1]) ==13003) or (int(self.Port)== 13003 and int(vals[1]) == 14003):
-                                pass                                     
-                            elif (int(self.Port) == 13003 and int(vals[1]) ==12003) or (int(self.Port) == 12003 and int(vals[1]) == 13003):
-                                pass
-                            elif (int(self.Port) == 12003 and int(vals[1]) ==17003) or (int(self.Port) == 17003 and int(vals[1]) == 12003):
-                                pass
-                            elif (int(self.Port) == 17003 and int(vals[1]) ==15003) or (int(self.Port) == 15003 and int(vals[1]) == 17003):
-                                pass
-                            elif (int(self.Port) == 15003 and int(vals[1]) ==16003) or (int(self.Port) == 16003 and int(vals[1]) == 15003):
-                                pass
-                            elif (int(self.Port) == 16003 and int(vals[1]) ==19003) or (int(self.Port) == 19003 and int(vals[1]) == 16003):
-                                pass
-                            elif (int(self.Port) == 19003 and int(vals[1]) ==18003) or (int(self.Port) == 18003 and int(vals[1]) == 19003):
-                                pass                                                                                                                #######################
-                            elif (int(self.Port) == 11004 and int(vals[1]) ==14004) or (int(self.Port) == 14004 and int(vals[1]) == 11004):
-                                pass
-                            elif (int(self.Port) == 14004 and int(vals[1]) ==13004) or (int(self.Port)== 13004 and int(vals[1]) == 14004):
-                                pass                                     
-                            elif (int(self.Port) == 13004 and int(vals[1]) ==12004) or (int(self.Port) == 12004 and int(vals[1]) == 13004):
-                                pass
-                            elif (int(self.Port) == 12004 and int(vals[1]) ==17004) or (int(self.Port) == 17004 and int(vals[1]) == 12004):
-                                pass
-                            elif (int(self.Port) == 17004 and int(vals[1]) ==15004) or (int(self.Port) == 15004 and int(vals[1]) == 17004):
-                                pass
-                            elif (int(self.Port) == 15004 and int(vals[1]) ==16004) or (int(self.Port) == 16004 and int(vals[1]) == 15004):
-                                pass
-                            elif (int(self.Port) == 16004 and int(vals[1]) ==19004) or (int(self.Port) == 19004 and int(vals[1]) == 16004):
-                                pass
-                            elif (int(self.Port) == 19004 and int(vals[1]) ==18004) or (int(self.Port) == 18004 and int(vals[1]) == 19004):
-                                pass                                                                                                                #########################
-                            elif (int(self.Port) == 11000 and int(vals[1]) ==13000) or (int(self.Port)== 13000 and int(vals[1]) == 11000):
-                                pass                                     
-                            elif (int(self.Port) == 13000 and int(vals[1]) ==17000) or (int(self.Port) == 17000 and int(vals[1]) == 13000):
-                                pass
-                            elif (int(self.Port) == 17000 and int(vals[1]) ==16000) or (int(self.Port) == 16000 and int(vals[1]) == 17000):
-                                pass
-                            elif (int(self.Port) == 16000 and int(vals[1]) ==18000) or (int(self.Port) == 18000 and int(vals[1]) == 16000):
-                                pass
-                            elif (int(self.Port) == 14000 and int(vals[1]) ==12000) or (int(self.Port) == 12000 and int(vals[1]) == 14000):
-                                pass
-                            elif (int(self.Port) == 12000 and int(vals[1]) ==15000) or (int(self.Port) == 15000 and int(vals[1]) == 12000):
-                                pass
-                            elif (int(self.Port) == 15000 and int(vals[1]) ==19000) or (int(self.Port) == 19000 and int(vals[1]) == 15000):
-                                pass
-                            elif (int(self.Port) == 11000 and int(vals[1]) ==12000) or (int(self.Port) == 12000 and int(vals[1]) == 11000):
-                                pass
-                            elif (int(self.Port) == 11000 and int(vals[1]) ==17000) or (int(self.Port) == 17000 and int(vals[1]) == 11000):
-                                pass
-                            elif (int(self.Port) == 14000 and int(vals[1]) ==15000) or (int(self.Port) == 15000 and int(vals[1]) == 14000):
-                                pass
-                            elif (int(self.Port) == 13000 and int(vals[1]) ==18000) or (int(self.Port) == 18000 and int(vals[1]) == 13000):
-                                pass
-                            elif (int(self.Port) == 17000 and int(vals[1]) ==18000) or (int(self.Port) == 18000 and int(vals[1]) == 17000):
-                                pass
-                            elif (int(self.Port) == 14000 and int(vals[1]) ==17000) or (int(self.Port) == 17000 and int(vals[1]) == 17000):
-                                pass
-                            elif (int(self.Port) == 13000 and int(vals[1]) ==15000) or (int(self.Port) == 15000 and int(vals[1]) == 13000):
-                                pass
-                            elif (int(self.Port) == 12000 and int(vals[1]) ==16000) or (int(self.Port) == 16000 and int(vals[1]) == 12000):
-                                pass
-                            elif (int(self.Port) == 12000 and int(vals[1]) ==19000) or (int(self.Port) == 19000 and int(vals[1]) == 12000):
-                                pass                                                                                                                  ########################
-                            elif (int(self.Port) == 13000 and int(vals[1]) ==16000) or (int(self.Port) == 16000 and int(vals[1]) == 13000):
-                                pass
-                            elif (int(self.Port) == 13000 and int(vals[1]) ==19000) or (int(self.Port) == 19000 and int(vals[1]) == 13000):
-                                pass 
-                            elif (int(self.Port) == 14000 and int(vals[1]) ==19000) or (int(self.Port) == 19000 and int(vals[1]) == 14000):
-                                pass                                                                                                                  ########################
-                            elif (int(self.Port) == 14000 and int(vals[1]) ==16000) or (int(self.Port) == 16000 and int(vals[1]) == 14000):
-                                pass
-                            elif (int(self.Port) == 14000 and int(vals[1]) ==18000) or (int(self.Port) == 18000 and int(vals[1]) == 14000):
-                                pass 
-                            elif (int(self.Port) == 11000 and int(vals[1]) ==15000) or (int(self.Port) == 15000 and int(vals[1]) == 11000):
-                                pass 
-                            elif (int(self.Port) == 11000 and int(vals[1]) ==16000) or (int(self.Port) == 16000 and int(vals[1]) == 11000):
-                                pass 
-                            elif (int(self.Port) == 11000 and int(vals[1]) ==18000) or (int(self.Port) == 18000 and int(vals[1]) == 11000):
-                                pass
-                            elif (int(self.Port) == 11000 and int(vals[1]) ==19000) or (int(self.Port) == 19000 and int(vals[1]) == 11000):
-                                pass
-                            elif (str(self.Port).startswith("110") == True) and (str(vals[1]).startswith("110")==True):
-                                pass
-                            elif (str(self.Port).startswith("120") == True) and (str(vals[1]).startswith("120")==True):
-                                pass
-                            elif (str(self.Port).startswith("130") == True) and (str(vals[1]).startswith("130")==True):
-                                pass
-                            elif (str(self.Port).startswith("140") == True) and (str(vals[1]).startswith("140")==True):
-                                pass
-                            elif (str(self.Port).startswith("150") == True) and (str(vals[1]).startswith("150")==True):
-                                pass
-                            elif (str(self.Port).startswith("160") == True) and (str(vals[1]).startswith("160")==True):
-                                pass
-                            elif (str(self.Port).startswith("170") == True) and (str(vals[1]).startswith("170")==True):
-                                pass
-                            elif (str(self.Port).startswith("180") == True) and (str(vals[1]).startswith("180")==True):
-                                pass
-                            elif (str(self.Port).startswith("190") == True) and (str(vals[1]).startswith("190")==True):
-                                pass
-                            else:
-                                # del self.neighborInfos[nid]
-                                # print("self port : ", self.Port, "neighbor deleted, port : ", vals[1])
-                                # #print("nothing, working locally")
-                                print("nothing, working with random 20% graph")
-                        # #################################################
-                                                
-                    ##############################
-                    ###############
+#?                                                                    
                         
                 self.NodeManagerRun()
             else:
                 if(not (self.unpause_datetime is None)):
                     if(datetime.datetime.now() > self.unpause_datetime):
                         self.managerOn = True
+
+#?
+
+    def DropNeighborbyLatency(self, nodesPORTStodrop):
+
+      
+         # ############## another ALGORITHM implementation  ##############   
+        # ## ast.literal_eval transforms string representation of a list to a list
+        nodesPORTStodrop = ast.literal_eval(nodesPORTStodrop)
+        #dbgprint("From ID: "+str(self.idval)+" port : "+str(self.Port)+" received list of nodes ports to drop : "+str(nodesPORTStodrop))
+ 
+        with self.neighborInfoLock:
+            for nid in list(self.neighborInfos):
+                vals = self.neighborInfos[nid] 
+ 
+                for i in range(len(nodesPORTStodrop)):
+                    if nodesPORTStodrop[i] == vals[1]:
+                        # dbgprint("Deleting neighbor port : "+str(vals[1]))
+                        # del self.neighborInfos[nid]
+                        pass
+
+    # #      #  # ############## another ALGORITHM implementation ends ##############            
+#?     
 
     def Pause(self):
         self.managerOn = False

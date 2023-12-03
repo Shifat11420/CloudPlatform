@@ -31,16 +31,16 @@ def ParseStartIDAndTime(line):
     else: 
         svals = line.split("ID:")
         endval = svals[len(svals)-1]
-        tvals = endval.split("2021-")
+        tvals = endval.split("2022-")
         idval = int(tvals[0])
-        timestr = "2021-"+tvals[1]
+        timestr = "2022-"+tvals[1]
         timeval = ParseTime(timestr.strip())    
     return [idval, timeval]
 
 def ParseExpStartTime(line):
     svals = line.split(EXPSTARTTIME)
-    tvals = svals[1].split("2021-")
-    timestr = "2021-"+tvals[1]
+    tvals = svals[1].split("2022-")
+    timestr = "2022-"+tvals[1]
     timeval = ParseTime(timestr.strip())
     return timeval
 
@@ -49,7 +49,7 @@ def findMachineUsageOneFile(afilename):
     fintimes = {}
     oldline = ""
     getnextfinish = False
-    with open(afilename, 'r') as ifile:
+    with open(afilename, 'r',encoding="latin-1") as ifile:
         for line in ifile:
             if(getnextfinish):
                 rval = ParseFinishIDAndTime(oldline + line)

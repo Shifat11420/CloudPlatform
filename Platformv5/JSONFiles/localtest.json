@@ -1,15 +1,17 @@
-{"node_count":"3",
-"prob_work_alloc":"0.0",
-"prob_connected":"0.2",
-"exp_time":"600",
-"container_count":"10",
-"vec_flows":[["-0.9","0.2"]],
- "vec_stases":[["-0.1","-0.1"]],
- "swapTimes":["1000"],
- "graphseed":"1626",
- "expectedTime":"500",
-"container_params":{
-    "args":"python Sandbox/simplematmul.py 50",
-    "files":["simplematmul.py"],
-    "isdocker":"False"}
-}
+{"node_count":"10",
+    "prob_work_alloc":"0.0",
+    "prob_connected":"0.2",
+    "exp_time":"600",
+    "container_count":"40",
+    "vec_flows":[["-1.0","-0.3","0.0"],["-0.7","-0.5","0.0"]],
+    "vec_stases":[["0.0","0.0","0.0"],["0.0","0.0","0.0"]],
+    "swapTimes":["400"],
+    "graphseed":"1626",
+    "expectedTime":"500",
+    "container_params":{
+        "args":"python3 Sandbox/simplematmul.py 50",
+        "files":["simplematmul.py"],
+        "isdocker":"False"}
+    }
+    
+

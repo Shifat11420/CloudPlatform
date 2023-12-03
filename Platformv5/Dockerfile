@@ -20,11 +20,15 @@ RUN apt-get update && apt-get install -y net-tools
 RUN apt-get update && apt install python3-pip -y
 RUN apt-get update && python3.8 -m pip install twisted
 #RUN apt-get update && python3.8 -m pip install tcp-latency
-
+RUN apt-get update && python3.8 -m pip install --upgrade pip \
+    && pip install \
+        ipython[all] \
+        numpy \
+        scipy \
+    && rm -fr /root/.cache
 
 RUN apt-get update && apt-get install -y fort77
 RUN apt-get update && apt-get install -y libf2c2-dev
-
 RUN DEBIAN_FRONTEND="noninteractive" apt-get -y install tzdata
 ENV TZ=America/Chicago
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone

@@ -33,15 +33,15 @@ class BenchDefFactory():
         #retval.expectedTime = self.expectedTime
         retval.swapTimes = self.swapTimes
 
-        # ##  Graph generation with Erdos-Renyi
-        self.graphgen = GraphGen(self.expindex + self.graphseed)
+        # # # ##  Graph generation with Erdos-Renyi
+        # self.graphgen = GraphGen(self.expindex + self.graphseed)
         
-        matrix = self.graphgen.ErdosRenyiConnected(self.node_count, self.prob_connected)
+        # matrix = self.graphgen.ErdosRenyiConnected(self.node_count, self.prob_connected)
 
-        ##  Full graph Graph generation 
-        # self.graphgen = GraphGen(self.expindex)
+        #  Full graph Graph generation 
+        self.graphgen = GraphGen(self.expindex)
         
-        # matrix = self.graphgen.fullgraphConnected(self.node_count)
+        matrix = self.graphgen.fullgraphConnected(self.node_count)
 
         print("GeneratedGraph")
         print(matrix)

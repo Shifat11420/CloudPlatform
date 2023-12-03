@@ -29,7 +29,7 @@ def BreakExpLog(iFile):
         if(EXPSTART in line):
             vals = line.split(EXPSTART)
             tval = vals[1].strip()
-            tval2 = "2021-" + tval.split("2021-")[1]
+            tval2 = "2022-" + tval.split("2022-")[1]
             expinfo[START]=tval2
         if(RCONT in line):
             vals = line.split(",")
@@ -120,7 +120,7 @@ def BreakLog(indir, outfilename, outputbad = False):
     wdoneset = []
     for aFile in os.listdir(indir):
         print("BREAKDOWN:"+indir+aFile)
-        with open(indir+aFile, 'r') as iFile:
+        with open(indir+aFile, 'r',encoding="latin-1") as iFile:
             if("exp" in aFile):
                 expinfo = BreakExpLog(iFile)
             else:

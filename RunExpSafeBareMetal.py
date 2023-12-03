@@ -5,12 +5,12 @@ import time
 #import random
 from GrabAllLogs import PullAllMchnFiles
 
-remotedir = "/home/shifat"
-remotenet = "eno1"   #"eth0"
+remotedir = "/home/shifat/Desktop"                ##for shifat's laptop
+remotenet = "enp94s0f0"
 
 distplatform = "bpete16/distplatform"
 platformdir = "Platformv5"
-platfile = "plat50conndelay35.tar"
+platfile = "plat.tar"
 
 debug = "True"
 #bashfile = "StartNTGPM.bash"
@@ -249,7 +249,7 @@ else:
     #print("after run experiment prime")
     #time.sleep(4*60)
 
-    #for x in (range(51,56)+range(20, 40)):
+    #for x in (range(51,56)+range(20, 40)):chsh
     for x in runs:
         print("EXPNUM!!  "+str(x)+"  !!")
         ofname = "outputexp800c"+str(x)+".txt"
